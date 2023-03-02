@@ -15,11 +15,12 @@ class Data {
   });
 
   List<Order> orders;
-  List<Table> tables;
+  List<TableX> tables;
 
   factory Data.fromJson(Map<dynamic, dynamic> json) => Data(
         orders: List<Order>.from(json["orders"].map((x) => Order.fromJson(x))),
-        tables: List<Table>.from(json["tables"].map((x) => Table.fromJson(x))),
+        tables:
+            List<TableX>.from(json["tables"].map((x) => TableX.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -72,8 +73,8 @@ class Order {
       };
 }
 
-class Table {
-  Table({
+class TableX {
+  TableX({
     required this.id,
     required this.name,
     required this.seats,
@@ -89,7 +90,7 @@ class Table {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory Table.fromJson(Map<String, dynamic> json) => Table(
+  factory TableX.fromJson(Map<String, dynamic> json) => TableX(
         id: json["id"],
         name: json["name"],
         seats: json["seats"],

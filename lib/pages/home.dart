@@ -7,12 +7,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meari/api/api.dart';
 import 'package:meari/api/data.dart';
+import 'package:meari/main.dart';
 import 'package:meari/pages/login.dart';
-// import 'package:navi/api/api.dart';
-// import 'package:navi/api/services.dart';
-// import 'package:navi/data.dart';
-// import 'package:navi/login.dart';
-// import 'package:navi/table.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,10 +27,6 @@ class _HomeState extends State<Home> {
       loading = true;
     });
     preferences = await SharedPreferences.getInstance();
-    //loading false viene richiamato nella funzione api
-    // setState(() {
-    //   loading = false;
-    // });
   }
 
   void logout() {
@@ -43,12 +35,13 @@ class _HomeState extends State<Home> {
         context, MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 
-  Map<dynamic, dynamic> homePage = {};
-  List<dynamic> homeData = [];
+  Map<dynamic, dynamic> homePageData = {};
+  List orders = [];
+  List tables = [];
   String errorMessage = '';
   bool apiHasError = false;
   //funzione per chiamata api
-  Future<Map<dynamic, dynamic>> fetchData() async {
+  Future<Map<String, dynamic>> fetchData() async {
     String token = await API().getToken();
     var url = 'http://10.0.2.2:8000/api/apiData';
     var response = await http.get(Uri.parse(url), headers: {
@@ -57,7 +50,7 @@ class _HomeState extends State<Home> {
     });
     await Future.delayed(const Duration(seconds: 1));
     loading = false;
-    final Map parsed = json.decode(response.body);
+    final Map<String, dynamic> parsed = json.decode(response.body);
     return parsed;
   }
 
@@ -68,8 +61,8 @@ class _HomeState extends State<Home> {
     });
     //try catch per la chiamata http
     try {
-      homePage = await fetchData();
-      homeData = homePage.keys.toList();
+      homePageData = await fetchData();
+      orders = homePageData['orders'];
     } on TimeoutException catch (_) {
       apiHasError = true;
       errorMessage = 'Tempo scaduto, riprovare';
@@ -86,6 +79,9 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // List<Order> orders = [];
+  // List<TableData> tables = [];
+
   @override
   void initState() {
     super.initState();
@@ -97,13 +93,23 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('HomePage'),
+          leading: Text('Logo'),
+          title: const Text('Home'),
           actions: [
-            ElevatedButton(
-                onPressed: () {
-                  logout();
-                },
-                child: const Text('Logout'))
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.logout),
+              onSelected: (value) {
+                logout();
+              },
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: 'Logout',
+                    child: Text('Logout'),
+                  )
+                ];
+              },
+            ),
           ],
         ),
         body: loading
@@ -120,9 +126,11 @@ class _HomeState extends State<Home> {
                     : ListView.builder(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.all(8),
-                        itemCount: homeData.length,
+                        itemCount: orders.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Column(children: [Text(homeData[index])]);
+                          return Column(children: [
+                            Text(orders[index]['id'].toString()),
+                          ]);
                         }),
               ));
   }
