@@ -8,7 +8,7 @@ class API {
     required String route,
     required Map<String, String> data,
   }) async {
-    String apiUrl = 'http://127.0.0.1:8000/api/';
+    String apiUrl = 'http://10.0.2.2:8000/api/';
 
     String url = apiUrl + route;
     try {

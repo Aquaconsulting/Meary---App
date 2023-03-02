@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meari/api/api.dart';
 import 'package:meari/main.dart';
+import 'package:meari/pages/home.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,9 +41,10 @@ class _LoginPageState extends State<LoginPage> {
       'email': mailController.text.toString(),
       'password': passwordController.text.toString(),
     };
+    //chiamata api in post
     final result = await API().postRequest(route: 'login', data: data);
+    print(result);
     final response = jsonDecode(result.body);
-    print(result.body);
     if (response['status'] == 200) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       await preferences.setInt('id', response['user'][0]['id']);
@@ -54,8 +56,7 @@ class _LoginPageState extends State<LoginPage> {
           content: Text(response['message']),
         ),
       );
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
       setState(() {
         loading = false;
       });

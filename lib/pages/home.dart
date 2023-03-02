@@ -44,13 +44,13 @@ class _HomeState extends State<Home> {
   }
 
   Map<dynamic, dynamic> homePage = {};
-  List<dynamic> home = [];
+  List<dynamic> homeData = [];
   String errorMessage = '';
   bool apiHasError = false;
   //funzione per chiamata api
   Future<Map<dynamic, dynamic>> fetchData() async {
     String token = await API().getToken();
-    var url = 'http://127.0.0.1:8000/api/apiData';
+    var url = 'http://10.0.2.2:8000/api/apiData';
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
@@ -58,7 +58,6 @@ class _HomeState extends State<Home> {
     await Future.delayed(const Duration(seconds: 1));
     loading = false;
     final Map parsed = json.decode(response.body);
-    print(parsed);
     return parsed;
   }
 
@@ -70,20 +69,18 @@ class _HomeState extends State<Home> {
     //try catch per la chiamata http
     try {
       homePage = await fetchData();
-      home = homePage.keys.toList();
+      homeData = homePage.keys.toList();
     } on TimeoutException catch (_) {
       apiHasError = true;
       errorMessage = 'Tempo scaduto, riprovare';
     } on SocketException catch (_) {
       apiHasError = true;
-      errorMessage = 'Qualcosa è andato storto, riprovare.';
+      errorMessage = 'Caricamento dei dati ';
+    } on FormatException catch (_) {
+      apiHasError = true;
+      errorMessage =
+          'Rifiuto persistente del server di destinazione, riprovare.';
     }
-
-    // on FormatException catch (_) {
-    //   apiHasError = true;
-    //   errorMessage =
-    //       'Rifiuto persistente del server di destinazione, riprovare.';
-    // }
     setState(() {
       loading = false;
     });
@@ -91,7 +88,6 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUserData();
     loadData();
@@ -101,13 +97,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('HomePage'),
+          title: const Text('HomePage'),
           actions: [
             ElevatedButton(
                 onPressed: () {
                   logout();
                 },
-                child: Text('Logout'))
+                child: const Text('Logout'))
           ],
         ),
         body: loading
@@ -116,14 +112,17 @@ class _HomeState extends State<Home> {
                 //se la chiamata http è andata in crash allora si vedrà il messaggio d'errore, altrimenti la listView-
                 child: apiHasError
                     ? Center(
-                        child: Text(errorMessage),
+                        child: Text(
+                          errorMessage,
+                          style: const TextStyle(fontSize: 17),
+                        ),
                       )
                     : ListView.builder(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.all(8),
-                        itemCount: home.length,
+                        itemCount: homeData.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Column(children: [Text(home[index])]);
+                          return Column(children: [Text(homeData[index])]);
                         }),
               ));
   }

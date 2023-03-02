@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
               //se il token esiste allora vai alla home
               if (token != null) {
                 return const Home();
-                //altrimenti alla pagina di login
               } else {
+                //altrimenti alla pagina di login
                 return const LoginPage();
               }
             } else {
@@ -71,8 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icon(Icons.abc))
           ],
         ),
-        body:
-            Container() // This trailing comma makes auto-formatting nicer for build methods.
-        );
+        body: Container());
   }
 }
