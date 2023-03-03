@@ -140,7 +140,19 @@ class _HomeState extends State<Home> {
                                     Text('note: ${orders[index]['note']}'),
                                 trailing: Text(orders[index]['order_state']
                                     ['current_state']),
+                                shape: RoundedRectangleBorder(
+                                  side:
+                                      BorderSide(width: 1, color: Colors.black),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
+                              // child: ListTile(
+                              //   title: Text(orders[index]['id'].toString()),
+                              //   subtitle:
+                              //       Text('note: ${orders[index]['note']}'),
+                              //   trailing: Text(orders[index]['order_state']
+                              //       ['current_state']),
+                              // ),
                             );
                           })),
             ),
