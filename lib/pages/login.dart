@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart';
 import 'package:meari/api/api.dart';
+import 'package:meari/api/data.dart';
 import 'package:meari/main.dart';
 import 'package:meari/pages/home.dart';
 import 'dart:convert';
@@ -24,18 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  void _showMsg(msg) {
-    final snackBar = SnackBar(
-      content: Text(msg),
-      action: SnackBarAction(
-        label: 'Close',
-        onPressed: () {
-          // Some code to undo the change!
-        },
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
 
   void loginUser() async {
     if (mounted) {
@@ -62,8 +51,11 @@ class _LoginPageState extends State<LoginPage> {
             content: Text(response['message']),
           ),
         );
+        print(response['user'][0]['id']);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => Home(userID: response['user'][0]['id'])));
       } else {
         errorMessage = 'Email o password errati.';
         loading = false;

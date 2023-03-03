@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
               final token = snapshot.data!.getString('token');
               //se il token esiste allora vai alla home
               if (token != null) {
-                return const Home();
+                return Home(
+                  userID: snapshot.data!.getInt('id')!,
+                );
               } else {
                 //altrimenti alla pagina di login
                 return const LoginPage();
@@ -57,20 +59,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(''),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
-                },
-                icon: Icon(Icons.abc))
-          ],
-        ),
-        body: Container());
+    return Container();
   }
 }

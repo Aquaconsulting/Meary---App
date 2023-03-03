@@ -38,6 +38,7 @@ dependencies:
   http: ^0.13.5
   shared_preferences: ^2.0.18
   email_validator: ^2.1.17
+  awesome_select: ^6.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
