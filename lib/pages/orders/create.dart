@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:http/http.dart';
 import 'package:meari/api/apiServices.dart';
 import 'package:meari/api/data.dart';
 import 'package:awesome_select/awesome_select.dart';
+import 'package:meari/pages/orders/detail.dart';
 
 class CreateOrderPage extends StatefulWidget {
-  CreateOrderPage({
-    super.key,
-    required this.userID,
-    required this.tables,
-  });
+  CreateOrderPage(
+      {super.key,
+      required this.userID,
+      required this.tables,
+      required this.products,
+      required this.categories});
   int userID;
   List tables = [];
+  List products = [];
+  List categories = [];
   @override
   State<CreateOrderPage> createState() => _CreateOrderPageState();
 }
@@ -25,22 +30,41 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     tables = widget.tables;
   }
 
+  String errorMessage = '';
   final _formKey = GlobalKey<FormState>();
   Object currentItem = {};
   TextEditingController noteController = TextEditingController();
   List tables = [];
+  int? orderID;
   addOrder() {
-    Services.addOrder(
-            widget.userID, value, noteController.text, DateTime.now(), 1)
-        .then((result) {
-      print(result);
-      print(value);
-      if (result == true) {
+    try {
+      Services.addOrder(widget.userID, int.parse(value), noteController.text,
+              DateTime.now(), 1)
+          .then((result) {
+        orderID = result['id'];
         setState(() {
-          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateDetail(
+                        orderID: orderID!,
+                        orderStateID: 1,
+                        products: widget.products,
+                        categories: widget.categories,
+                      )));
         });
-      }
-    });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Ordine creato con successo, inserisci i dettagli.'),
+        ));
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Qualcosa è andato storto, riprova'),
+        ),
+      );
+      return e.toString();
+    }
   }
 
   dynamic value;
@@ -63,6 +87,13 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   style: TextStyle(fontSize: 20),
                 ),
                 SmartSelect<String>.single(
+                    validation: (value) {
+                      if (value.isEmpty) {
+                        return 'Compila questo campo';
+                      } else {
+                        return '';
+                      }
+                    },
                     selectedValue: value.toString(),
                     title: 'Seleziona un tavolo',
                     choiceItems: List.generate(
@@ -92,6 +123,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   keyboardType: TextInputType.multiline,
                   maxLines: 4,
                   controller: noteController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Compila questo campo';
+                    }
+                  },
                 )
               ],
             )),
@@ -99,6 +135,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           addOrder();
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState!.save();
+            //funzione per chiudere la tastiera automaticamente
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
         },
         child: const Icon(Icons.add),
       ),

@@ -1,35 +1,54 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:meari/api/api.dart';
 import 'package:meari/api/data.dart';
 
 class Services {
   static const apiUrl = 'http://10.0.2.2:8000/api/orders/';
-  // static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
-  // static const _GET_ALL_ACTION = 'GET_ALL';
-  // static const _ADD_EMP_ACTION = 'ADD_EMP';
-  // static const _UPDATE_EMP_ACTION = 'UPDATE_EMP';
-  // static const _DELETE_EMP_ACTION = 'DELETE_EMP';
 
-  static Future<String> addOrder(int userID, int tableID, String note,
+  static Future<dynamic> addOrder(int userID, int tableID, String note,
       DateTime date, int orderStateID) async {
+    String token = await API().getToken();
+
     try {
-      var map = Map<String, dynamic>();
-      map['user_id'] = userID;
-      map['table_id'] = tableID;
-      map['note'] = note;
-      map['date'] = date;
-      map['order_state_id'] = orderStateID;
-      final response = await http.post(Uri.parse(apiUrl), body: map);
-      print('order add Response: ${response.body}');
-      if (200 == response.statusCode) {
-        return response.body;
-      } else {
-        print(response.body);
-        return response.body;
-      }
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: jsonEncode(<String, dynamic>{
+          'user_id': userID,
+          'table_id': tableID,
+          'note': note,
+          'date': date == null ? null : date.toIso8601String(),
+          'order_state_id': orderStateID,
+        }),
+      );
+      final Map<String, dynamic> parsed = json.decode(response.body);
+      return parsed;
     } catch (e) {
       return e.toString();
     }
+    // try {
+    //   var map = Map<String, dynamic>();
+    //   map['user_id'] = userID;
+    //   map['table_id'] = tableID;
+    //   map['note'] = note;
+    //   map['date'] = date;
+    //   map['order_state_id'] = orderStateID;
+    //   final response = await http.post(Uri.parse(apiUrl), body: map);
+    //   print('order add Response: ${response.body}');
+    //   if (200 == response.statusCode) {
+    //     return response.body;
+    //   } else {
+    //     print(response.body);
+    //     return response.body;
+    //   }
+    // } catch (e) {
+    //   return e.toString();
+    // }
   }
 
   // static Future<bool> updateEmployee(
