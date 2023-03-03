@@ -30,14 +30,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   TextEditingController noteController = TextEditingController();
   List tables = [];
   addOrder() {
-    Services.addOrder(widget.userID, findId(currentItem, 'id'),
-            noteController.text, DateTime.now(), 1)
+    Services.addOrder(
+            widget.userID, value, noteController.text, DateTime.now(), 1)
         .then((result) {
       print(result);
-      print(widget.userID);
-      print(findId(currentItem, 'id'));
-      print(noteController.text);
-      print(DateTime.now());
+      print(value);
       if (result == true) {
         setState(() {
           Navigator.pop(context);
@@ -46,16 +43,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     });
   }
 
-  //funzine per prendere id del tavolo dalla select
-  int findId(item, id) {
-    return item[id];
-  }
-
-  String findName(item, name) {
-    return item[name];
-  }
-
-  dynamic value = 'flutter';
+  dynamic value;
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +63,12 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   style: TextStyle(fontSize: 20),
                 ),
                 SmartSelect<String>.single(
-                    selectedValue: value,
+                    selectedValue: value.toString(),
                     title: 'Seleziona un tavolo',
                     choiceItems: List.generate(
                         widget.tables.length,
                         (index) => S2Choice<String>(
-                            value: tables[index]['id'].toString(),
+                            value: '${tables[index]['id']}',
                             title:
                                 '${tables[index]['name']}, posti: ${tables[index]['seats']}')),
                     onChange: (state) {
