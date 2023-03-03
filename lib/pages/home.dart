@@ -38,7 +38,8 @@ class _HomeState extends State<Home> {
 
   Map<dynamic, dynamic> homePageData = {};
   List orders = [];
-
+  List products = [];
+  List categories = [];
   String errorMessage = '';
   bool apiHasError = false;
   //funzione per chiamata api
@@ -65,6 +66,8 @@ class _HomeState extends State<Home> {
     try {
       homePageData = await fetchData();
       orders = homePageData['orders'];
+      products = homePageData['products'];
+      categories = homePageData['categories'];
     } on TimeoutException catch (_) {
       apiHasError = true;
       errorMessage = 'Tempo scaduto, riprovare';
@@ -80,9 +83,6 @@ class _HomeState extends State<Home> {
       loading = false;
     });
   }
-
-  // List<Order> orders = [];
-  // List<TableData> tables = [];
 
   @override
   void initState() {
@@ -158,6 +158,8 @@ class _HomeState extends State<Home> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: loading
+            //TO FIXXXX: se la chiamata è andata in crash mettere un tooltip per non fare cliccare di nuovo il bottone
+            //dato che loading sarà a false
             //se la chiamata sta ancora caricando non fare cliccare il bottone
             ? null
             : () {
@@ -167,6 +169,8 @@ class _HomeState extends State<Home> {
                         builder: (context) => CreateOrderPage(
                               userID: widget.userID,
                               tables: homePageData['tables'],
+                              products: products,
+                              categories: categories,
                             )));
               },
         backgroundColor: Colors.green,
