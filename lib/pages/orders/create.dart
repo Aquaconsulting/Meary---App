@@ -47,6 +47,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => CreateDetail(
+                        userID: widget.userID,
                         orderID: orderID!,
                         orderStateID: 1,
                         products: widget.products,
@@ -134,8 +135,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          addOrder();
           if (_formKey.currentState!.validate()) {
+            addOrder();
             _formKey.currentState!.save();
             //funzione per chiudere la tastiera automaticamente
             FocusManager.instance.primaryFocus?.unfocus();
