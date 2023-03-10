@@ -96,7 +96,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         leading: const Text('Logo'),
-        title: Text('Homeaa ${widget.userID.toString()}'),
+        title: const Text('Home'),
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.logout),
@@ -122,7 +122,7 @@ class _HomeState extends State<Home> {
                   ? Center(
                       child: Text(
                         errorMessage,
-                        style: const TextStyle(fontSize: 17),
+                        style: const TextStyle(fontSize: 14),
                       ),
                     )
                   : Container(
@@ -146,13 +146,6 @@ class _HomeState extends State<Home> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              // child: ListTile(
-                              //   title: Text(orders[index]['id'].toString()),
-                              //   subtitle:
-                              //       Text('note: ${orders[index]['note']}'),
-                              //   trailing: Text(orders[index]['order_state']
-                              //       ['current_state']),
-                              // ),
                             );
                           })),
             ),

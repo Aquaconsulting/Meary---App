@@ -1,19 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meari/api/api.dart';
 import 'package:meari/api/data.dart';
+import 'package:meari/pages/orders/detail.dart';
 
 class Services {
-  static const apiUrl = 'http://10.0.2.2:8000/api/orders/';
-
   static Future<dynamic> addOrder(int userID, int tableID, String note,
       DateTime date, int orderStateID) async {
     String token = await API().getToken();
 
     try {
       final response = await http.post(
-        Uri.parse(apiUrl),
+        Uri.parse('http://10.0.2.2:8000/api/orders/'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
@@ -31,57 +31,37 @@ class Services {
     } catch (e) {
       return e.toString();
     }
-    // try {
-    //   var map = Map<String, dynamic>();
-    //   map['user_id'] = userID;
-    //   map['table_id'] = tableID;
-    //   map['note'] = note;
-    //   map['date'] = date;
-    //   map['order_state_id'] = orderStateID;
-    //   final response = await http.post(Uri.parse(apiUrl), body: map);
-    //   print('order add Response: ${response.body}');
-    //   if (200 == response.statusCode) {
-    //     return response.body;
-    //   } else {
-    //     print(response.body);
-    //     return response.body;
-    //   }
-    // } catch (e) {
-    //   return e.toString();
-    // }
   }
 
-  // static Future<bool> updateEmployee(
-  //     String empId, String firstName, String lastName) async {
-  //   try {
-  //     var map = Map<String, dynamic>();
-  //     map['action'] = _UPDATE_EMP_ACTION;
-  //     map['id'] = empId;
-  //     map['first_name'] = firstName;
-  //     map['last_name'] = lastName;
-  //     final response = await http.put(Uri.parse(ROOT + empId), body: map);
-  //     print('updateEmployee Response: ${response.body}');
-  //     if (200 == response.statusCode) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
+  static Future<Map<String, dynamic>> addOrderDetail(
+      List details, String note) async {
+    String token = await API().getToken();
 
-  // static Future<bool> deleteEmployee(String empId) async {
-  //   try {
-  //     final response = await http.delete(Uri.parse(ROOT + empId));
-  //     print('deleteEmployee Response: ${response.body}');
-  //     if (200 == response.statusCode) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
+    List<Map<String, dynamic>>? finalDetail = [];
+    finalDetail = [
+      for (int i = 0; i < details.length; i++)
+        {
+          "order_id": "${details[i].orderID}",
+          "product_id": "${details[i].productID}",
+          "note": note,
+          "quantity": "${details[i].quantity}",
+          "price": "${details[i].price}",
+          "order_state_id": "${details[i].orderStateID}"
+        }
+    ];
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8000/api/order_details/'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: jsonEncode(<String, dynamic>{"orderData": finalDetail}),
+      );
+      final Map<String, dynamic> parsed = json.decode(response.body);
+      return parsed;
+    } catch (e) {
+      return {'error': e};
+    }
+  }
 }
