@@ -85,7 +85,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('LOGO'),
+          backgroundColor: Colors.white,
+          title: const Text(
+            'LOGO',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: Container(
           margin: const EdgeInsets.all(20),
@@ -100,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Text(
                 'Login',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Form(
                   // autovalidateMode: AutovalidateMode.always,
