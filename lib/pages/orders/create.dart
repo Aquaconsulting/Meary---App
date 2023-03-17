@@ -41,8 +41,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
       Services.addOrder(widget.userID, int.parse(value), noteController.text,
               DateTime.now(), 1)
           .then((result) {
-        orderID = result['id'];
-        setState(() {
+        if (result != false) {
+          //SE LA L'API RITORNA L'OGGETTO PRENDO ID DELL'ORDINE APPENA CREATO E LO PASSO ALLA PAGINA SUCCESSIVA
+          orderID = result['id'];
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -53,19 +54,28 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         products: widget.products,
                         categories: widget.categories,
                       )));
-        });
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Ordine creato con successo, inserisci i dettagli.'),
-        ));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Ordine creato con successo'),
+          ));
+        } else {
+          // SE INVECE RITORNA FALSE MOSTRA QUESTO
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('Qualcosa è andato storto.'),
+                    content:
+                        const Text('Controlla la tua connessione e riprova.'),
+                    actions: [
+                      TextButton(
+                          onPressed: (() {
+                            Navigator.pop(context);
+                          }),
+                          child: const Text('Chiudi'))
+                    ],
+                  ));
+        }
       });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Qualcosa è andato storto, riprova'),
-        ),
-      );
-      return e.toString();
-    }
+    } catch (e) {}
   }
 
   dynamic value;

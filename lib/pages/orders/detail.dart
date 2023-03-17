@@ -154,21 +154,34 @@ class _CreateDetailState extends State<CreateDetail> {
     try {
       Services.addOrderDetail(details, noteController.text).then((result) {
         print(result);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Home(userID: widget.userID)));
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Dettaglio ordine creato con successo'),
-        ));
+        if (result) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Home(userID: widget.userID)));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Dettaglio ordine creato con successo'),
+          ));
+          //SVUOTA ARRAY DEI PRODOTTI
+          details = [];
+        } else {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('Qualcosa è andato storto.'),
+                    content:
+                        const Text('Controlla la tua connessione e riprova.'),
+                    actions: [
+                      TextButton(
+                          onPressed: (() {
+                            Navigator.pop(context);
+                          }),
+                          child: const Text('Chiudi'))
+                    ],
+                  ));
+        }
       });
-    } catch (e) {
-      return ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Qualcosa è andato storto, riprova'),
-        ),
-      );
-    }
+    } catch (e) {}
   }
 
   @override
@@ -234,14 +247,11 @@ class _CreateDetailState extends State<CreateDetail> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(details);
           if (_formKey.currentState!.validate()) {
             addOrderDetail();
             _formKey.currentState!.save();
             //funzione per chiudere la tastiera automaticamente
             FocusManager.instance.primaryFocus?.unfocus();
-            //SVUOTA ARRAY DEI PRODOTTI
-            details = [];
           }
         },
         child: const Icon(Icons.add),
