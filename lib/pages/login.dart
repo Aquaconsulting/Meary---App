@@ -85,90 +85,120 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Login'),
+          backgroundColor: Colors.white,
+          title: const Text(
+            'LOGO',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: Container(
           margin: const EdgeInsets.all(20),
-          child: Form(
-              // autovalidateMode: AutovalidateMode.always,
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    style: const TextStyle(color: Color(0xFF000000)),
-                    controller: mailController,
-                    cursorColor: const Color(0xFF9b9b9b),
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.account_circle,
-                        color: Colors.grey,
-                      ),
-                      hintText: "Email",
-                      hintStyle: TextStyle(
-                          color: Color(0xFF9b9b9b),
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    validator: (value) {
-                      isValid = EmailValidator.validate(value!);
-                      if (isValid == false) {
-                        return 'Inserisci una mail valida';
-                      }
-                    },
-                  ),
-                  TextFormField(
-                    style: const TextStyle(color: Color(0xFF000000)),
-                    cursorColor: const Color(0xFF9b9b9b),
-                    controller: passwordController,
-                    obscureText: seePassword ? false : true,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.remove_red_eye_sharp),
-                        onPressed: () {
-                          setState(() {
-                            seePassword = !seePassword;
-                          });
+          child: Column(
+            children: [
+              SizedBox(
+                height: 200,
+              ),
+              Divider(color: Colors.black),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'Login',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Form(
+                  // autovalidateMode: AutovalidateMode.always,
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        style: const TextStyle(color: Color(0xFF000000)),
+                        controller: mailController,
+                        cursorColor: const Color(0xFF9b9b9b),
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.account_circle,
+                            color: Colors.grey,
+                          ),
+                          hintText: "Email",
+                          hintStyle: TextStyle(
+                              color: Color(0xFF9b9b9b),
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        validator: (value) {
+                          isValid = EmailValidator.validate(value!);
+                          if (isValid == false) {
+                            return 'Inserisci una mail valida';
+                          }
                         },
                       ),
-                      prefixIcon: const Icon(
-                        Icons.vpn_key,
-                        color: Colors.grey,
-                      ),
-                      hintText: "Password",
-                      hintStyle: const TextStyle(
-                          color: Color(0xFF9b9b9b),
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Inserisci la password';
-                      }
-                      return null;
-                    },
-                  ),
-                  ElevatedButton(
-                      onPressed: loading
-                          ? null
-                          : () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                loginUser();
-                                //funzione per chiudere la tastiera automaticamente
-                                FocusManager.instance.primaryFocus?.unfocus();
-                              }
+                      TextFormField(
+                        style: const TextStyle(color: Color(0xFF000000)),
+                        cursorColor: const Color(0xFF9b9b9b),
+                        controller: passwordController,
+                        obscureText: seePassword ? false : true,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.remove_red_eye_sharp),
+                            onPressed: () {
+                              setState(() {
+                                seePassword = !seePassword;
+                              });
                             },
-                      child: loading
-                          ? const Text('Caricamento...')
-                          : const Text('Login')),
-                  Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: Text(errorMessage != '' ? errorMessage : ''),
-                  )
-                ],
-              )),
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.vpn_key,
+                            color: Colors.grey,
+                          ),
+                          hintText: "Password",
+                          hintStyle: const TextStyle(
+                              color: Color(0xFF9b9b9b),
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Inserisci la password';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Container(
+                        height: 60,
+                        width: 320,
+                        child: ElevatedButton(
+                            onPressed: loading
+                                ? null
+                                : () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                      loginUser();
+                                      //funzione per chiudere la tastiera automaticamente
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                    }
+                                  },
+                            child: loading
+                                ? const Text('Caricamento...')
+                                : const Text(
+                                    'ACCEDI',
+                                    style: TextStyle(fontSize: 18),
+                                  )),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        child: Text(errorMessage != '' ? errorMessage : ''),
+                      )
+                    ],
+                  )),
+            ],
+          ),
         ));
   }
 }
