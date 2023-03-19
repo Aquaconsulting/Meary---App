@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart';
 import 'package:meari/api/api.dart';
 import 'package:meari/api/data.dart';
+import 'package:meari/components/customAppBar.dart';
 import 'package:meari/main.dart';
 import 'package:meari/pages/home.dart';
 import 'dart:convert';
@@ -17,6 +18,18 @@ class LoginPage extends StatefulWidget {
 
   @override
   State<LoginPage> createState() => _LoginPageState();
+}
+
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -84,120 +97,164 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: const Text(
-            'LOGO',
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-        body: Container(
-          margin: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 200,
-              ),
-              Divider(color: Colors.black),
-              SizedBox(
-                height: 12,
-              ),
-              Text(
-                'Login',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Form(
-                  // autovalidateMode: AutovalidateMode.always,
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        style: const TextStyle(color: Color(0xFF000000)),
-                        controller: mailController,
-                        cursorColor: const Color(0xFF9b9b9b),
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.account_circle,
-                            color: Colors.grey,
+        backgroundColor: HexColor('#F4F3F3'),
+        appBar: CustomAppBar(),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 200,
+                ),
+                const Divider(color: Colors.black),
+                const SizedBox(
+                  height: 12,
+                ),
+                Form(
+                    // autovalidateMode: AutovalidateMode.always,
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          style: const TextStyle(color: Color(0xFF000000)),
+                          controller: mailController,
+                          cursorColor: const Color(0xFF9b9b9b),
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey.withOpacity(0.5)),
+                                borderRadius: BorderRadius.circular(8)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey.withOpacity(0.1)),
+                                borderRadius: BorderRadius.circular(8)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            fillColor: Colors.white,
+                            filled: true,
+                            disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey.withOpacity(0.1)),
+                                borderRadius: BorderRadius.circular(8)),
+                            labelStyle: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              color: Color(0xffaab8c2),
+                            ),
+                            labelText: 'Email',
+                            contentPadding:
+                                const EdgeInsets.only(left: 10, top: 40),
+                            //labelText: "Password",
+                            hintStyle: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              color: Color(0xffaab8c2),
+                            ),
                           ),
-                          hintText: "Email",
-                          hintStyle: TextStyle(
-                              color: Color(0xFF9b9b9b),
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal),
+                          validator: (value) {
+                            isValid = EmailValidator.validate(value!);
+                            if (isValid == false) {
+                              return 'Inserisci una mail valida';
+                            }
+                          },
                         ),
-                        validator: (value) {
-                          isValid = EmailValidator.validate(value!);
-                          if (isValid == false) {
-                            return 'Inserisci una mail valida';
-                          }
-                        },
-                      ),
-                      TextFormField(
-                        style: const TextStyle(color: Color(0xFF000000)),
-                        cursorColor: const Color(0xFF9b9b9b),
-                        controller: passwordController,
-                        obscureText: seePassword ? false : true,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.remove_red_eye_sharp),
-                            onPressed: () {
-                              setState(() {
-                                seePassword = !seePassword;
-                              });
-                            },
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.vpn_key,
-                            color: Colors.grey,
-                          ),
-                          hintText: "Password",
-                          hintStyle: const TextStyle(
-                              color: Color(0xFF9b9b9b),
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal),
+                        const SizedBox(
+                          height: 20,
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Inserisci la password';
-                          }
-                          return null;
-                        },
+                        TextFormField(
+                          style: const TextStyle(color: Color(0xFF000000)),
+                          cursorColor: const Color(0xFF9b9b9b),
+                          controller: passwordController,
+                          obscureText: seePassword ? false : true,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey.withOpacity(0.5)),
+                                borderRadius: BorderRadius.circular(8)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey.withOpacity(0.1)),
+                                borderRadius: BorderRadius.circular(8)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            fillColor: Colors.white,
+                            filled: true,
+                            disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey.withOpacity(0.1)),
+                                borderRadius: BorderRadius.circular(8)),
+                            labelStyle: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              color: Color(0xffaab8c2),
+                            ),
+                            labelText: 'Password',
+                            contentPadding:
+                                const EdgeInsets.only(left: 10, top: 40),
+                            //labelText: "Password",
+                            hintStyle: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              color: Color(0xffaab8c2),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Inserisci la password';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          height: 60,
+                          width: 320,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: HexColor('#43ABFB')),
+                              onPressed: loading
+                                  ? null
+                                  : () {
+                                      if (_formKey.currentState!.validate()) {
+                                        _formKey.currentState!.save();
+                                        loginUser();
+                                        //funzione per chiudere la tastiera automaticamente
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                      }
+                                    },
+                              child: loading
+                                  ? const Text('Caricamento...')
+                                  : const Text(
+                                      'ACCEDI',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w400),
+                                    )),
+                        ),
+                      ],
+                    )),
+                TextButton(
+                    onPressed: (() {}),
+                    child: const Text(
+                      'Password dimenticata?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
                       ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Container(
-                        height: 60,
-                        width: 320,
-                        child: ElevatedButton(
-                            onPressed: loading
-                                ? null
-                                : () {
-                                    if (_formKey.currentState!.validate()) {
-                                      _formKey.currentState!.save();
-                                      loginUser();
-                                      //funzione per chiudere la tastiera automaticamente
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                    }
-                                  },
-                            child: loading
-                                ? const Text('Caricamento...')
-                                : const Text(
-                                    'ACCEDI',
-                                    style: TextStyle(fontSize: 18),
-                                  )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 20),
-                        child: Text(errorMessage != '' ? errorMessage : ''),
-                      )
-                    ],
-                  )),
-            ],
+                    )),
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Text(errorMessage != '' ? errorMessage : ''),
+                )
+              ],
+            ),
           ),
         ));
   }
