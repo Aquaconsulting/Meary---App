@@ -6,3 +6,4 @@ List orders = [];
 List products = [];
 List categories = [];
 List orderDetails = [];
+List tables = [];

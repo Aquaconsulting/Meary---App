@@ -5,11 +5,15 @@ import 'package:http/http.dart';
 import 'package:meari/api/apiServices.dart';
 import 'package:meari/api/data.dart';
 import 'package:awesome_select/awesome_select.dart';
+import 'package:meari/components/customAppBar.dart';
+import 'package:meari/pages/coperti.dart';
 import 'package:meari/pages/orders/detail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateOrderPage extends StatefulWidget {
   CreateOrderPage(
       {super.key,
+      required this.userName,
       required this.userID,
       required this.tables,
       required this.products,
@@ -18,8 +22,21 @@ class CreateOrderPage extends StatefulWidget {
   List tables = [];
   List products = [];
   List categories = [];
+  String userName;
   @override
   State<CreateOrderPage> createState() => _CreateOrderPageState();
+}
+
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
 
 class _CreateOrderPageState extends State<CreateOrderPage> {
@@ -38,8 +55,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   int? orderID;
   addOrder() {
     try {
-      Services.addOrder(widget.userID, int.parse(value), noteController.text,
-              DateTime.now(), 1)
+      Services.addOrder(widget.userID, value!, 'fix this', DateTime.now(), 1)
           .then((result) {
         if (result != false) {
           //SE LA L'API RITORNA L'OGGETTO PRENDO ID DELL'ORDINE APPENA CREATO E LO PASSO ALLA PAGINA SUCCESSIVA
@@ -47,7 +63,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CreateDetail(
+                  builder: (context) => AddPlace(
+                        tableID: value!,
+                        userName: widget.userName,
                         userID: widget.userID,
                         orderID: orderID!,
                         orderStateID: 1,
@@ -78,82 +96,67 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     } catch (e) {}
   }
 
-  dynamic value;
+  int? value;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crea Ordine'),
-      ),
-      body: Container(
-        margin: const EdgeInsets.all(18),
-        child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Tavolo:',
-                  style: TextStyle(fontSize: 20),
-                ),
-                SmartSelect<String>.single(
-                    validation: (value) {
-                      if (value.isEmpty) {
-                        return 'Compila questo campo';
-                      } else {
-                        return '';
-                      }
-                    },
-                    selectedValue: value.toString(),
-                    title: 'Seleziona un tavolo',
-                    choiceItems: List.generate(
-                        widget.tables.length,
-                        (index) => S2Choice<String>(
-                            value: '${tables[index]['id']}',
-                            title:
-                                '${tables[index]['name']}, posti: ${tables[index]['seats']}')),
-                    onChange: (state) {
-                      setState(() {
-                        value = state.value;
-                        print(value);
-                      });
-                    }),
-                Container(
-                  margin: const EdgeInsets.only(top: 30, bottom: 10),
-                  child: const Text(
-                    'Note:',
-                    style: TextStyle(fontSize: 20),
+        appBar: CustomAppBar(),
+        body: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(20),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.userName,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(DateTime.now().toString())
+                  ]),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              width: MediaQuery.of(context).size.width,
+              color: HexColor('#F4F3F3'),
+              child: Column(
+                children: const [
+                  Text(
+                    'ASSEGNA TAVOLO',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Inserire nota comanda...',
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 4,
-                  controller: noteController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Compila questo campo';
-                    }
-                  },
-                )
-              ],
-            )),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            addOrder();
-            _formKey.currentState!.save();
-            //funzione per chiudere la tastiera automaticamente
-            FocusManager.instance.primaryFocus?.unfocus();
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+                ],
+              ),
+            ),
+            Wrap(
+              children: List.generate(
+                  widget.tables.length,
+                  (index) => InkWell(
+                        onTap: () {
+                          value = widget.tables[index]['id'];
+                          addOrder();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: HexColor('#4BC59E'),
+                              borderRadius: BorderRadius.circular(8)),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 10),
+                          height: 110,
+                          width: 110,
+                          child: Center(
+                            child: Text(
+                              widget.tables[index]['id'].toString(),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 30),
+                            ),
+                          ),
+                        ),
+                      )),
+            )
+          ],
+        ));
   }
 }

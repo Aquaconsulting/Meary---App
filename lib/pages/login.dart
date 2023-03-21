@@ -64,11 +64,12 @@ class _LoginPageState extends State<LoginPage> {
             content: Text(response['message']),
           ),
         );
-        print(response['user'][0]['id']);
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => Home(userID: response['user'][0]['id'])));
+                builder: (context) => Home(
+                      userID: response['user'][0]['id'],
+                    )));
       } else {
         errorMessage = 'Email o password errati.';
         loading = false;

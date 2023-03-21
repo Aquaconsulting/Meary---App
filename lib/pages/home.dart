@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meari/api/api.dart';
 import 'package:meari/api/data.dart';
+import 'package:meari/components/customAppBar.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/orders/create.dart';
 import 'package:meari/pages/login.dart';
@@ -19,6 +20,18 @@ class Home extends StatefulWidget {
   int userID;
   @override
   State<Home> createState() => _HomeState();
+}
+
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
 
 class _HomeState extends State<Home> {
@@ -62,6 +75,7 @@ class _HomeState extends State<Home> {
     try {
       homePageData = await fetchData();
       orders = homePageData['orders'];
+      tables = homePageData['tables'];
       products = homePageData['products'];
       categories = homePageData['categories'];
       orderDetails = homePageData['order_details'];
@@ -94,26 +108,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Text('Logo'),
-        title: const Text('Home'),
-        actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.logout),
-            onSelected: (value) {
-              logout();
-            },
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(
-                  value: 'Logout',
-                  child: Text('Logout'),
-                )
-              ];
-            },
-          ),
-        ],
-      ),
+      backgroundColor: HexColor('#F4F3F3'),
+      appBar: CustomAppBar(),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : Container(
@@ -125,65 +121,87 @@ class _HomeState extends State<Home> {
                         style: const TextStyle(fontSize: 14),
                       ),
                     )
-                  : Container(
-                      margin: const EdgeInsets.all(15),
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          padding: const EdgeInsets.all(8),
-                          itemCount: orders.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              width: 20,
-                              child: InkWell(
-                                child: ListTile(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                UpdateOrderPage(
-                                                  currentOrder: orders[index],
-                                                  orderDetail: orderDetails
-                                                      .where((element) =>
-                                                          element['order_id'] ==
-                                                          orders[index]['id'])
-                                                      .toList(),
-                                                  userID: widget.userID,
-                                                )));
-                                  },
-                                  title: Text(orders[index]['id'].toString()),
-                                  subtitle:
-                                      Text('note: ${orders[index]['note']}'),
-                                  trailing: Text(orders[index]['order_state']
-                                      ['current_state']),
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        width: 1, color: Colors.black),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
+                  : Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: 400,
+                        width: MediaQuery.of(context).size.width - 120,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () async {
+                                SharedPreferences pre =
+                                    await SharedPreferences.getInstance();
+                                String name = pre.getString('name')!;
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CreateOrderPage(
+                                            userID: widget.userID,
+                                            tables: homePageData['tables'],
+                                            products: products,
+                                            categories: categories,
+                                            userName: name)));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: HexColor('#727270'),
+                                    borderRadius: BorderRadius.circular(10)),
+                                width: MediaQuery.of(context).size.width,
+                                height: 170,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 22, bottom: 28),
+                                      child: Image.asset(
+                                        'assets/images/pen.png',
+                                        scale: 2,
+                                      ),
+                                    ),
+                                    const Text(
+                                      'CREA COMANDA',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 25),
+                                    )
+                                  ],
                                 ),
                               ),
-                            );
-                          })),
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // SE CI SONO ERRORI NON FAR CLICCARE IL BOTTONE
-          if (!loading && !apiHasError) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CreateOrderPage(
-                          userID: widget.userID,
-                          tables: homePageData['tables'],
-                          products: products,
-                          categories: categories,
-                        )));
-          }
-        },
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.add),
-      ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: HexColor('##67CDFD'),
+                                  borderRadius: BorderRadius.circular(10)),
+                              width: MediaQuery.of(context).size.width,
+                              height: 170,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin:
+                                        EdgeInsets.only(top: 15, bottom: 22),
+                                    child: Image.asset(
+                                      'assets/images/paper.png',
+                                      scale: 2,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'ELENCO COMANDE',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 25),
+                                  )
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  logout();
+                                },
+                                child: Text('sda'))
+                          ],
+                        ),
+                      ),
+                    )),
     );
   }
 }

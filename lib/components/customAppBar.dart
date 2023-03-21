@@ -31,21 +31,37 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              margin: EdgeInsets.only(left: 18),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22),
-                color: HexColor('#002115'),
+            // Container(
+            //   margin: const EdgeInsets.only(left: 18),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(22),
+            //     color: HexColor('#002115'),
+            //   ),
+            //   width: 34,
+            //   height: 34,
+            //   child: IconButton(
+            //       color: Colors.white,
+            //       iconSize: 16,
+            //       onPressed: () {},
+            //       icon: const Icon(Icons.arrow_back_ios_new_rounded)),
+            // ),
+
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 20),
+                child: Image.asset(
+                  'assets/images/back.png',
+                  scale: 1,
+                ),
               ),
-              width: 34,
-              height: 34,
-              child: IconButton(
-                  color: Colors.white,
-                  iconSize: 16,
-                  onPressed: () {},
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded)),
             ),
-            Text('Titolo'),
+            Image.asset(
+              'assets/images/logo.png',
+              scale: 2,
+            ),
             Container(
               margin: EdgeInsets.only(right: 22),
               height: 28,

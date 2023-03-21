@@ -5,12 +5,14 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meari/api/apiServices.dart';
 import 'package:meari/api/data.dart';
+import 'package:meari/components/customAppBar.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/home.dart';
 
 class CreateDetail extends StatefulWidget {
   CreateDetail(
       {super.key,
+      required this.userName,
       required this.userID,
       required this.orderID,
       required this.orderStateID,
@@ -21,6 +23,7 @@ class CreateDetail extends StatefulWidget {
   int orderStateID;
   List<dynamic> products = [];
   List<dynamic> categories = [];
+  String userName;
   @override
   State<CreateDetail> createState() => _CreateDetailState();
 }
@@ -40,6 +43,18 @@ class ListTileItem extends StatefulWidget {
   int orderStateID;
   @override
   _ListTileItemState createState() => _ListTileItemState();
+}
+
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
 
 class _ListTileItemState extends State<ListTileItem> {
@@ -113,23 +128,6 @@ class OrderDetail {
   String toString() {
     return '{orderID: $orderID, orderStateID: $orderStateID, price: $price, quantity: $quantity, productID: $productID}';
   }
-
-  // OrderDetail.fromJson(Map<String, dynamic> json)
-  //     : orderID = json['orderID'],
-  //       orderStateID = json['orderStateID'],
-  //       price = json['price'],
-  //       quantity = json['quantity'],
-  //       productID = json['productID'];
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'orderID': orderID,
-  //     'orderStateID': orderStateID,
-  //     'price': price,
-  //     'quantity': quantity,
-  //     'productID': productID,
-  //   };
-  // }
 }
 
 class _CreateDetailState extends State<CreateDetail> {
@@ -187,75 +185,114 @@ class _CreateDetailState extends State<CreateDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              //SVUOTA ARRAY DEI PRODOTTI
-              details = [];
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back_rounded)),
-        title: const Text('Dettaglio comanda'),
-      ),
-      body: Container(
-        margin: const EdgeInsets.all(14),
-        child: SingleChildScrollView(
-            child: Form(
-                key: _formKey,
-                child: Column(
+        backgroundColor: HexColor('#F4F3F3'),
+        appBar: CustomAppBar(),
+        body: SingleChildScrollView(
+          child: Column(children: [
+            Container(
+              margin: const EdgeInsets.all(20),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        padding: const EdgeInsets.all(8),
-                        itemCount: widget.categories.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.categories[index]['name'],
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w700),
-                              ),
-                              Wrap(
-                                children: List.generate(widget.products.length,
-                                    (index2) => filterItem(index, index2)),
-                              )
-                            ],
-                          );
-                        }),
-                    Container(
-                      margin: const EdgeInsets.only(top: 20),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Inserire Dettagli comanda...',
+                    Text(
+                      widget.userName,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(DateTime.now().toString())
+                  ]),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 30),
+              child: const Divider(
+                thickness: 0.5,
+                color: Colors.black,
+              ),
+            ),
+            Wrap(
+              children: List.generate(
+                  widget.categories.length,
+                  (index) => InkWell(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8)),
+                          padding: EdgeInsets.all(10),
+                          margin:
+                              EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                          height: 170,
+                          width: MediaQuery.of(context).size.width / 2 - 30,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: HexColor('#CDD4D9'),
+                                borderRadius: BorderRadius.circular(6)),
+                            child: Center(
+                              child: Text(widget.categories[index]['name']),
+                            ),
+                          ),
                         ),
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 4,
-                        controller: noteController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Compila questo campo';
-                          }
-                        },
-                      ),
-                    )
-                  ],
-                ))),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            addOrderDetail();
-            _formKey.currentState!.save();
-            //funzione per chiudere la tastiera automaticamente
-            FocusManager.instance.primaryFocus?.unfocus();
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+                      )),
+            )
+            // Container(
+            //   margin: const EdgeInsets.all(14),
+            //   child: SingleChildScrollView(
+            //       child: Form(
+            //           key: _formKey,
+            //           child: Column(
+            //             children: [
+            //               ListView.builder(
+            //                   shrinkWrap: true,
+            //                   scrollDirection: Axis.vertical,
+            //                   padding: const EdgeInsets.all(8),
+            //                   itemCount: widget.categories.length,
+            //                   itemBuilder: (BuildContext context, int index) {
+            //                     return Column(
+            //                       crossAxisAlignment: CrossAxisAlignment.start,
+            //                       children: [
+            //                         Text(
+            //                           widget.categories[index]['name'],
+            //                           style: const TextStyle(
+            //                               fontSize: 20, fontWeight: FontWeight.w700),
+            //                         ),
+            //                         Wrap(
+            //                           children: List.generate(widget.products.length,
+            //                               (index2) => filterItem(index, index2)),
+            //                         )
+            //                       ],
+            //                     );
+            //                   }),
+            //               Container(
+            //                 margin: const EdgeInsets.only(top: 20),
+            //                 child: TextFormField(
+            //                   decoration: const InputDecoration(
+            //                     border: OutlineInputBorder(),
+            //                     hintText: 'Inserire Dettagli comanda...',
+            //                   ),
+            //                   keyboardType: TextInputType.multiline,
+            //                   maxLines: 4,
+            //                   controller: noteController,
+            //                   validator: (value) {
+            //                     if (value!.isEmpty) {
+            //                       return 'Compila questo campo';
+            //                     }
+            //                   },
+            //                 ),
+            //               )
+            //             ],
+            //           ))),
+            // ),
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () {
+            //     if (_formKey.currentState!.validate()) {
+            //       addOrderDetail();
+            //       _formKey.currentState!.save();
+            //       //funzione per chiudere la tastiera automaticamente
+            //       FocusManager.instance.primaryFocus?.unfocus();
+            //     }
+            //   },
+            //   child: const Icon(Icons.add),
+            // ),
+          ]),
+        ));
   }
 }
