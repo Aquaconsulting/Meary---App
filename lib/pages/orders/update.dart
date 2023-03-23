@@ -1,9 +1,9 @@
-import 'package:awesome_select/awesome_select.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meari/api/apiServices.dart';
 import 'package:meari/constant.dart';
+import 'package:meari/pages/confirmProduct.dart';
 import 'package:meari/pages/orders/detail.dart';
 
 class UpdateOrderPage extends StatefulWidget {
@@ -107,163 +107,163 @@ class _UpdateOrderPageState extends State<UpdateOrderPage> {
             },
             icon: const Icon(Icons.arrow_back_rounded)),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(14),
-          child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  const Text('Cambia tavolo:', style: TextStyle(fontSize: 18)),
-                  SmartSelect<String>.single(
-                      validation: (value) {
-                        if (value.isEmpty) {
-                          return 'Compila questo campo';
-                        } else {
-                          return '';
-                        }
-                      },
-                      selectedValue: value,
-                      title: 'Seleziona un tavolo',
-                      choiceItems: List.generate(
-                          tables.length,
-                          (index) => S2Choice<String>(
-                              value: '${tables[index]['id']}',
-                              title:
-                                  '${tables[index]['name']}, posti: ${tables[index]['seats']}')),
-                      onChange: (state) {
-                        setState(() {
-                          value = state.value;
-                        });
-                      }),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, bottom: 10),
-                    child: const Text(
-                      'Note:',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  TextFormField(
-                    onChanged: (value) {
-                      note = value;
-                    },
-                    initialValue: widget.currentOrder['note'],
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Inserire nota comanda...',
-                    ),
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 4,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Compila questo campo';
-                      }
-                    },
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 20, bottom: 26),
-                    child: FloatingActionButton(
-                      heroTag: 'btn2',
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          updateOrder();
-                          _formKey.currentState!.save();
-                          //funzione per chiudere la tastiera automaticamente
-                          FocusManager.instance.primaryFocus?.unfocus();
-                        }
-                      },
-                      child: const Icon(Icons.edit),
-                    ),
-                  ),
-                  //DIVIDER PER DISTINGUERE ORDER DA ORDER_DETAIL
-                  Row(children: const [
-                    Expanded(
-                        child: Divider(
-                      indent: 10,
-                      endIndent: 6,
-                      color: Colors.grey,
-                      thickness: 1,
-                    )),
-                    Text("Modifica Prodotti"),
-                    Expanded(
-                        child: Divider(
-                      indent: 10,
-                      endIndent: 6,
-                      color: Colors.grey,
-                      thickness: 1,
-                    )),
-                  ]),
-                  // Text(widget.orderDetail[1]['id'].toString())
-                  Form(
-                      key: _formKey2,
-                      child: Column(
-                        children: [
-                          ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              padding: const EdgeInsets.all(8),
-                              itemCount: categories.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      categories[index]['name'],
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    Wrap(
-                                      children: List.generate(
-                                          products.length,
-                                          (index2) =>
-                                              filterItem(index, index2)),
-                                    )
-                                  ],
-                                );
-                              }),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                detailNote = value;
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Inserire Dettagli comanda...',
-                              ),
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 4,
-                              initialValue: widget.orderDetail[0]['note'],
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Compila questo campo';
-                                }
-                              },
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20, bottom: 26),
-                            child: FloatingActionButton(
-                              heroTag: 'btn1',
-                              onPressed: () {
-                                if (_formKey2.currentState!.validate()) {
-                                  updateOrderDetail();
-                                  _formKey2.currentState!.save();
-                                  //funzione per chiudere la tastiera automaticamente
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                }
-                                print(details);
-                              },
-                              child: const Icon(Icons.edit),
-                            ),
-                          ),
-                        ],
-                      ))
-                ],
-              )),
-        ),
-      ),
+      // body: SingleChildScrollView(
+      //   child: Container(
+      //     margin: const EdgeInsets.all(14),
+      //     child: Form(
+      //         key: _formKey,
+      //         child: Column(
+      //           children: [
+      //             const Text('Cambia tavolo:', style: TextStyle(fontSize: 18)),
+      //             SmartSelect<String>.single(
+      //                 validation: (value) {
+      //                   if (value.isEmpty) {
+      //                     return 'Compila questo campo';
+      //                   } else {
+      //                     return '';
+      //                   }
+      //                 },
+      //                 selectedValue: value,
+      //                 title: 'Seleziona un tavolo',
+      //                 choiceItems: List.generate(
+      //                     tables.length,
+      //                     (index) => S2Choice<String>(
+      //                         value: '${tables[index]['id']}',
+      //                         title:
+      //                             '${tables[index]['name']}, posti: ${tables[index]['seats']}')),
+      //                 onChange: (state) {
+      //                   setState(() {
+      //                     value = state.value;
+      //                   });
+      //                 }),
+      //             Container(
+      //               margin: const EdgeInsets.only(top: 30, bottom: 10),
+      //               child: const Text(
+      //                 'Note:',
+      //                 style: TextStyle(fontSize: 20),
+      //               ),
+      //             ),
+      //             TextFormField(
+      //               onChanged: (value) {
+      //                 note = value;
+      //               },
+      //               initialValue: widget.currentOrder['note'],
+      //               decoration: const InputDecoration(
+      //                 border: OutlineInputBorder(),
+      //                 hintText: 'Inserire nota comanda...',
+      //               ),
+      //               keyboardType: TextInputType.multiline,
+      //               maxLines: 4,
+      //               validator: (value) {
+      //                 if (value!.isEmpty) {
+      //                   return 'Compila questo campo';
+      //                 }
+      //               },
+      //             ),
+      //             Container(
+      //               margin: const EdgeInsets.only(top: 20, bottom: 26),
+      //               child: FloatingActionButton(
+      //                 heroTag: 'btn2',
+      //                 onPressed: () {
+      //                   if (_formKey.currentState!.validate()) {
+      //                     updateOrder();
+      //                     _formKey.currentState!.save();
+      //                     //funzione per chiudere la tastiera automaticamente
+      //                     FocusManager.instance.primaryFocus?.unfocus();
+      //                   }
+      //                 },
+      //                 child: const Icon(Icons.edit),
+      //               ),
+      //             ),
+      //             //DIVIDER PER DISTINGUERE ORDER DA ORDER_DETAIL
+      //             Row(children: const [
+      //               Expanded(
+      //                   child: Divider(
+      //                 indent: 10,
+      //                 endIndent: 6,
+      //                 color: Colors.grey,
+      //                 thickness: 1,
+      //               )),
+      //               Text("Modifica Prodotti"),
+      //               Expanded(
+      //                   child: Divider(
+      //                 indent: 10,
+      //                 endIndent: 6,
+      //                 color: Colors.grey,
+      //                 thickness: 1,
+      //               )),
+      //             ]),
+      //             // Text(widget.orderDetail[1]['id'].toString())
+      //             Form(
+      //                 key: _formKey2,
+      //                 child: Column(
+      //                   children: [
+      //                     ListView.builder(
+      //                         shrinkWrap: true,
+      //                         scrollDirection: Axis.vertical,
+      //                         padding: const EdgeInsets.all(8),
+      //                         itemCount: categories.length,
+      //                         itemBuilder: (BuildContext context, int index) {
+      //                           return Column(
+      //                             crossAxisAlignment: CrossAxisAlignment.start,
+      //                             children: [
+      //                               Text(
+      //                                 categories[index]['name'],
+      //                                 style: const TextStyle(
+      //                                     fontSize: 20,
+      //                                     fontWeight: FontWeight.w700),
+      //                               ),
+      //                               Wrap(
+      //                                 children: List.generate(
+      //                                     products.length,
+      //                                     (index2) =>
+      //                                         filterItem(index, index2)),
+      //                               )
+      //                             ],
+      //                           );
+      //                         }),
+      //                     Container(
+      //                       margin: const EdgeInsets.only(top: 20),
+      //                       child: TextFormField(
+      //                         onChanged: (value) {
+      //                           detailNote = value;
+      //                         },
+      //                         decoration: const InputDecoration(
+      //                           border: OutlineInputBorder(),
+      //                           hintText: 'Inserire Dettagli comanda...',
+      //                         ),
+      //                         keyboardType: TextInputType.multiline,
+      //                         maxLines: 4,
+      //                         initialValue: widget.orderDetail[0]['note'],
+      //                         validator: (value) {
+      //                           if (value!.isEmpty) {
+      //                             return 'Compila questo campo';
+      //                           }
+      //                         },
+      //                       ),
+      //                     ),
+      //                     Container(
+      //                       margin: const EdgeInsets.only(top: 20, bottom: 26),
+      //                       child: FloatingActionButton(
+      //                         heroTag: 'btn1',
+      //                         onPressed: () {
+      //                           if (_formKey2.currentState!.validate()) {
+      //                             updateOrderDetail();
+      //                             _formKey2.currentState!.save();
+      //                             //funzione per chiudere la tastiera automaticamente
+      //                             FocusManager.instance.primaryFocus?.unfocus();
+      //                           }
+      //                           print(details);
+      //                         },
+      //                         child: const Icon(Icons.edit),
+      //                       ),
+      //                     ),
+      //                   ],
+      //                 ))
+      //           ],
+      //         )),
+      //   ),
+      // ),
     );
   }
 }

@@ -30,6 +30,7 @@ class Services {
       final Map<String, dynamic> parsed = json.decode(response.body);
       return parsed;
     } catch (e) {
+      print(e.toString());
       return false;
     }
   }
@@ -62,18 +63,19 @@ class Services {
 
   static Future<dynamic> changeTable(int orderID, int value) async {
     String token = await API().getToken();
+
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:8000/api/changeTable/$orderID/$value'),
+        Uri.parse('http://10.0.2.2:8000/api/changeTable'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
         },
         body: jsonEncode(<String, dynamic>{'orderID': orderID, 'value': value}),
       );
-      final Map<String, dynamic> parsed = json.decode(response.body);
       return true;
     } catch (e) {
+      print(e.toString());
       return false;
     }
   }

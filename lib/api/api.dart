@@ -28,6 +28,6 @@ class API {
   _setTokenHeaders() => {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer 1|Ii1AClo2zKCx0z8Qt3LYt6m9NYMe8ZCGl23nuAnT',
+        // 'Authorization': 'Bearer 1|Ii1AClo2zKCx0z8Qt3LYt6m9NYMe8ZCGl23nuAnT',
       };
 }

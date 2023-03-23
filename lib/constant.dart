@@ -1,9 +1,21 @@
+import 'package:meari/pages/confirmProduct.dart';
 import 'package:meari/pages/orders/detail.dart';
 
-List<OrderDetail> details = [];
+List details = [];
 Map<dynamic, dynamic> homePageData = {};
 List orders = [];
 List products = [];
 List categories = [];
 List orderDetails = [];
 List tables = [];
+int? userID;
+String userName = '';
+dynamic defaultOrderState;
+int coperti = 0;
+DateTime date = DateTime.parse(DateTime.now().toString());
+var mm = date.month;
+var day = date.day;
+var yy = date.year;
+var hh = date.hour;
+var min = date.minute;
+String today = '$yy/$mm/$day - $hh:$min';
