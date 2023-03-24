@@ -1,5 +1,5 @@
-import 'package:meari/pages/confirmProduct.dart';
-import 'package:meari/pages/orders/detail.dart';
+import 'package:meari/pages/orders/confirmProduct.dart';
+import 'package:meari/pages/orders/chooseCategory.dart';
 
 List details = [];
 Map<dynamic, dynamic> homePageData = {};
@@ -10,8 +10,7 @@ List orderDetails = [];
 List tables = [];
 int? userID;
 String userName = '';
-dynamic defaultOrderState;
-int coperti = 0;
+int? defaultOrderState;
 DateTime date = DateTime.parse(DateTime.now().toString());
 var mm = date.month;
 var day = date.day;

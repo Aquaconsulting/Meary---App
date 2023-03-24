@@ -3,7 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meari/components/customModal.dart';
 import 'package:meari/constant.dart';
-import 'package:meari/pages/orders/detail.dart';
+import 'package:meari/pages/orders/chooseCategory.dart';
 
 class AddPlace extends StatefulWidget {
   AddPlace(
@@ -28,6 +28,8 @@ class AddPlace extends StatefulWidget {
 
 class _AddPlaceState extends State<AddPlace> {
   int counter = 0;
+  int coperti = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,9 +233,10 @@ class _AddPlaceState extends State<AddPlace> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => CreateDetail(
+                              orderDetail: [],
+                              coperti: coperti,
                               tableID: widget.tableID,
-                              userName: widget.userName,
-                              userID: widget.userID,
+                              userID: userID!,
                               orderID: widget.orderID,
                               orderStateID: 1,
                               products: widget.products,

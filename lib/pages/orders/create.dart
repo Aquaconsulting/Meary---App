@@ -7,7 +7,7 @@ import 'package:meari/api/data.dart';
 import 'package:meari/components/customAppBar.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/coperti.dart';
-import 'package:meari/pages/orders/detail.dart';
+import 'package:meari/pages/orders/chooseCategory.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateOrderPage extends StatefulWidget {
@@ -56,7 +56,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   addOrder() {
     try {
       Services.addOrder(widget.userID, value!, 'fix this', DateTime.now(),
-              defaultOrderState[0]['id'])
+              defaultOrderState!)
           .then((result) {
         if (result != false) {
           //SE LA L'API RITORNA L'OGGETTO PRENDO ID DELL'ORDINE APPENA CREATO E LO PASSO ALLA PAGINA SUCCESSIVA
@@ -98,16 +98,16 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   }
 
   int? value;
-  // String color = '';
 
-  // getTableColour(int index) {
-  //   for (var element in orders) {
-  //     if (element['table_id'] == tables[index]['id']) {
-  //       color = element['order_state']['state_colour'];
-  //     }
-  //   }
-  //   return color;
-  // }
+  getTableColour(index) {
+    for (var element in orders) {
+      if (element['table_id'] == tables[index]['id']) {
+        String color = element['order_state']['state_colour'];
+
+        return color;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -221,8 +221,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                       (index) => InkWell(
                             onTap: () {
                               value = widget.tables[index]['id'];
-                              //SE IL TAVOLO E' LIBERO PERMETTI DI CLICCARE
-                              addOrder();
+                              // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
+                              if (getTableColour(index) == null ||
+                                  getTableColour(index) == '#4BC59E') {
+                                addOrder();
+                              }
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -234,7 +237,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                       offset: const Offset(0, 3),
                                     )
                                   ],
-                                  color: HexColor('#4BC59E'),
+                                  color: HexColor(getTableColour(index) != null
+                                      ? getTableColour(index)
+                                      : '#4BC59E'),
                                   borderRadius: BorderRadius.circular(8)),
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 10),

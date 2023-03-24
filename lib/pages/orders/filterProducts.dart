@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -5,20 +7,24 @@ import 'package:meari/api/data.dart';
 import 'package:meari/components/customAppBar.dart';
 import 'package:meari/components/customModal.dart';
 import 'package:meari/constant.dart';
-import 'package:meari/pages/confirmProduct.dart';
-import 'package:meari/pages/orders/detail.dart';
+import 'package:meari/pages/orders/confirmProduct.dart';
+import 'package:meari/pages/orders/chooseCategory.dart';
 
 class ShowCategory extends StatefulWidget {
   ShowCategory(
       {super.key,
+      required this.coperti,
       required this.orderID,
       required this.tableID,
       required this.userName,
       required this.filteredProducts,
-      required this.category});
+      required this.category,
+      required this.orderDetail});
   String userName;
+  List orderDetail;
   int orderID;
   int tableID;
+  int coperti;
   dynamic category;
   List filteredProducts;
   @override
@@ -126,7 +132,7 @@ class _ShowCategoryState extends State<ShowCategory> {
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: Text(
-                        '$coperti',
+                        '${widget.coperti}',
                         style: TextStyle(
                             fontSize: 20,
                             color: HexColor('#FF3131'),
@@ -167,25 +173,31 @@ class _ShowCategoryState extends State<ShowCategory> {
                 (index) => InkWell(
                       onTap: () {
                         // CHECK SE IL PRODOTTO GIA ESISTE NELL'ARRAY DEI DETTAGLI
+                        print(widget.orderDetail);
+
+                        // create:  [{order_id: 158, order_state_id: 3, price: 12.0, quantity: 3, product_id: 1}, {order_id: 158, order_state_id: 3, price: 3.0, quantity: 2, product_id: 3}]
+                        //  update:  [{id: 57, order_id: 137, product_id: 1, note: asd22444, quantity: 5, price: 12.00, order_state_id: 3, created_at: 2023-03-24T10:28:33.000000Z, updated_at: 2023-03-24T10:28:33.000000Z, order: {id: 137, user_id: 6, table_id: 9, date: 2023-03-24 10:26:54, note: fix this, order_state_id: 3, created_at: 2023-03-24T10:26:55.000000Z, updated_at: 2023-03-24T10:26:55.000000Z}}]
                         var newItem = OrderDetail(
                             widget.orderID,
-                            defaultOrderState[0]['id'],
+                            defaultOrderState!,
                             double.parse(
                                 widget.filteredProducts[index]['price']),
                             1,
                             widget.filteredProducts[index]['id']);
-                        var existingItem = details.firstWhere(
+                        var existingItem = widget.orderDetail.firstWhere(
                             (itemToCheck) =>
-                                itemToCheck.productID == newItem.productID,
+                                itemToCheck['product_id'] == newItem.product_id,
                             orElse: () => null);
                         // SE ESISTE NON AGGIUNGERLO DI NUOVO
                         if (existingItem == null) {
-                          details.add(newItem);
+                          widget.orderDetail.add(newItem);
                         }
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ConfirmProduct(
+                                    orderDetail: widget.orderDetail,
+                                    coperti: widget.coperti,
                                     orderID: widget.orderID,
                                     tableID: widget.tableID,
                                     userName: widget.userName)));

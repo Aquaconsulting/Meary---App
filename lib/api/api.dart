@@ -15,7 +15,7 @@ class API {
       return await http.post(Uri.parse(url),
           body: jsonEncode(data), headers: _setTokenHeaders());
     } catch (e) {
-      print(e.toString());
+      return e;
     }
   }
 

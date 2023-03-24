@@ -43,13 +43,14 @@ class _CustomModalState extends State<CustomModal> {
 
   String color = '';
 
-  String getTableColour(int index) {
+  getTableColour(index) {
     for (var element in orders) {
       if (element['table_id'] == tables[index]['id']) {
-        color = element['order_state']['state_colour'];
+        String color = element['order_state']['state_colour'];
+
+        return color;
       }
     }
-    return color;
   }
 
   @override
@@ -63,12 +64,18 @@ class _CustomModalState extends State<CustomModal> {
             (index) => InkWell(
                   onTap: () {
                     value = tables[index]['id'];
-                    changeTable();
+                    // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
+                    if (getTableColour(index) == null ||
+                        getTableColour(index) == '#4BC59E') {
+                      changeTable();
+                    }
                     setState(() {});
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                        color: HexColor(getTableColour(index)),
+                        color: HexColor(getTableColour(index) != null
+                            ? getTableColour(index)
+                            : '#4BC59E'),
                         borderRadius: BorderRadius.circular(8)),
                     margin:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 10),

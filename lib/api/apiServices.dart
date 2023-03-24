@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meari/api/api.dart';
-import 'package:meari/api/data.dart';
-import 'package:meari/pages/orders/detail.dart';
 
 class Services {
   // STORE ORDER
@@ -30,7 +27,6 @@ class Services {
       final Map<String, dynamic> parsed = json.decode(response.body);
       return parsed;
     } catch (e) {
-      print(e.toString());
       return false;
     }
   }
@@ -61,6 +57,23 @@ class Services {
     }
   }
 
+  // DELETE ORDER
+  static Future<dynamic> deleteOrder(int orderID) async {
+    String token = await API().getToken();
+    try {
+      final response = await http.delete(
+        Uri.parse('http://10.0.2.2:8000/api/orders/$orderID'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<dynamic> changeTable(int orderID, int value) async {
     String token = await API().getToken();
 
@@ -75,7 +88,6 @@ class Services {
       );
       return true;
     } catch (e) {
-      print(e.toString());
       return false;
     }
   }
@@ -88,12 +100,12 @@ class Services {
     finalDetail = [
       for (int i = 0; i < details.length; i++)
         {
-          "order_id": "${details[i].orderID}",
-          "product_id": "${details[i].productID}",
+          "order_id": "${details[i].order_id}",
+          "product_id": "${details[i].product_id}",
           "note": note,
           "quantity": "${details[i].quantity}",
           "price": "${details[i].price}",
-          "order_state_id": "${details[i].orderStateID}"
+          "order_state_id": "${details[i].order_state_id}"
         }
     ];
     try {
@@ -105,6 +117,7 @@ class Services {
         },
         body: jsonEncode(<String, dynamic>{"orderData": finalDetail}),
       );
+
       json.decode(response.body);
       return true;
     } catch (e) {
@@ -113,34 +126,33 @@ class Services {
   }
 
   // UPDATE ORDER DETAIL
-  static Future<dynamic> updateOrderDetail(List details, String note, x) async {
+  static Future<dynamic> updateOrderDetail(List details, String note) async {
     String token = await API().getToken();
-
     List<Map<String, dynamic>>? finalDetail = [];
     finalDetail = [
       for (int i = 0; i < details.length; i++)
         {
-          "order_id": "${details[i].orderID}",
-          "product_id": "${details[i].productID}",
+          "id": "${details[i]['id']}",
+          "order_id": "${details[i]['order_id']}",
+          "product_id": "${details[i]['product_id']}",
           "note": note,
-          "quantity": "${details[i].quantity}",
-          "price": "${details[i].price}",
-          "order_state_id": "${details[i].orderStateID}"
+          "quantity": "${details[i]['quantity']}",
+          "price": "${details[i]['price']}",
+          "order_state_id": "${details[i]['order_state_id']}"
         }
     ];
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:8000/api/order_details/$x'),
+        Uri.parse('http://10.0.2.2:8000/api/order_details/0'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
         },
         body: jsonEncode(<String, dynamic>{"orderData": finalDetail}),
       );
-      json.decode(response.body);
+
       return true;
     } catch (e) {
-      print(e.toString());
       return false;
     }
   }

@@ -1,16 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meari/api/apiServices.dart';
-import 'package:meari/components/customAppBar.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/home.dart';
 
-class ConfirmOrder extends StatefulWidget {
-  ConfirmOrder({super.key, required this.orderDetail});
+class ConfirmUpdate extends StatefulWidget {
+  ConfirmUpdate({super.key, required this.order, required this.orderDetail});
+  dynamic order;
   List orderDetail;
   @override
-  State<ConfirmOrder> createState() => _ConfirmOrderState();
+  State<ConfirmUpdate> createState() => _ConfirmUpdateState();
 }
 
 class HexColor extends Color {
@@ -25,11 +26,11 @@ class HexColor extends Color {
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
 
-class _ConfirmOrderState extends State<ConfirmOrder> {
+class _ConfirmUpdateState extends State<ConfirmUpdate> {
   double totalPrice = 0;
   getTotalPrice() {
-    for (var element in widget.orderDetail) {
-      var counting = element.price * element.quantity;
+    for (var element in orderDetails) {
+      var counting = double.parse(element['price']) * element['quantity'];
       totalPrice = totalPrice + counting;
     }
     return totalPrice;
@@ -37,24 +38,24 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
 
   getProductName(x) {
     for (var element in products) {
-      if (element['id'] == x.product_id) {
+      if (element['id'] == x['product_id']) {
         return element['name'];
       }
     }
   }
 
-  addOrderDetail() {
+  updateOrderDetail() {
     try {
-      Services.addOrderDetail(widget.orderDetail, 'tofix').then((result) {
-        if (result) {
+      Services.updateOrderDetail(widget.orderDetail, 'asd22444').then((result) {
+        if (result != false) {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => Home(userID: userID!)));
+
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Dettaglio ordine creato con successo'),
+            content: Text('Dettaglio ordine modificato con successo'),
           ));
-          //SVUOTA ARRAY DEI PRODOTTI
-          details = [];
         } else {
+          // SE INVECE RITORNA FALSE MOSTRA QUESTO
           showDialog(
               context: context,
               builder: (context) => AlertDialog(
@@ -77,12 +78,11 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: HexColor('#F4F3F3'),
       body: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: 40, left: 20, right: 20),
+            margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
             height: 550,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -276,7 +276,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700)),
                                     Text(
-                                      'Quantità ${widget.orderDetail[index].quantity}',
+                                      'Quantità ${widget.orderDetail[index]['quantity']}',
                                       style: TextStyle(
                                           fontSize: 14,
                                           color: HexColor('#A1C2C5'),
@@ -287,7 +287,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                 subtitle: Container(
                                   margin: EdgeInsets.only(top: 30),
                                   child: Text(
-                                    '€${widget.orderDetail[index].price}',
+                                    '€${widget.orderDetail[index]['price']}',
                                     style: TextStyle(
                                         color: HexColor('#43ABFB'),
                                         fontWeight: FontWeight.w600),
@@ -319,7 +319,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 18, vertical: 15),
                               backgroundColor: HexColor('#43ABFB')),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                           child: Row(
                             children: [
                               Container(
@@ -395,7 +397,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                   horizontal: 18, vertical: 15),
                               backgroundColor: HexColor('#4BC59E')),
                           onPressed: () {
-                            addOrderDetail();
+                            updateOrderDetail();
                           },
                           child: Row(
                             children: [
@@ -421,5 +423,6 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
         ],
       ),
     );
+    ;
   }
 }

@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
       products = homePageData['products'];
       categories = homePageData['categories'];
       orderDetails = homePageData['order_details'];
-      defaultOrderState = homePageData['default'];
+      defaultOrderState = homePageData['default'][0];
     } on TimeoutException catch (_) {
       apiHasError = true;
       errorMessage = 'Tempo scaduto, riprovare';

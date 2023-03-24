@@ -8,26 +8,28 @@ import 'package:meari/api/data.dart';
 import 'package:meari/components/customAppBar.dart';
 import 'package:meari/components/customModal.dart';
 import 'package:meari/constant.dart';
-import 'package:meari/pages/filterProducts.dart';
+import 'package:meari/pages/orders/filterProducts.dart';
 import 'package:meari/pages/home.dart';
 
 class CreateDetail extends StatefulWidget {
   CreateDetail(
       {super.key,
       required this.tableID,
-      required this.userName,
       required this.userID,
       required this.orderID,
       required this.orderStateID,
       required this.products,
-      required this.categories});
+      required this.categories,
+      required this.coperti,
+      required this.orderDetail});
   int orderID;
   int userID;
   int tableID;
+  int coperti;
   int orderStateID;
+  List orderDetail;
   List<dynamic> products = [];
   List<dynamic> categories = [];
-  String userName;
   @override
   State<CreateDetail> createState() => _CreateDetailState();
 }
@@ -46,6 +48,7 @@ class HexColor extends Color {
 
 class _CreateDetailState extends State<CreateDetail> {
   TextEditingController noteController = TextEditingController();
+  int coperti = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +63,7 @@ class _CreateDetailState extends State<CreateDetail> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.userName,
+                      userName,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 16),
                     ),
@@ -133,9 +136,9 @@ class _CreateDetailState extends State<CreateDetail> {
                         ],
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 10),
+                        margin: const EdgeInsets.only(left: 10),
                         child: Text(
-                          '$coperti',
+                          '${widget.coperti}',
                           style: TextStyle(
                               fontSize: 20,
                               color: HexColor('#FF3131'),
@@ -159,6 +162,8 @@ class _CreateDetailState extends State<CreateDetail> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ShowCategory(
+                                      orderDetail: widget.orderDetail,
+                                      coperti: widget.coperti,
                                       filteredProducts: products
                                           .where((element) =>
                                               element['category_id'] ==
@@ -167,7 +172,7 @@ class _CreateDetailState extends State<CreateDetail> {
                                       category: widget.categories[index],
                                       orderID: widget.orderID,
                                       tableID: widget.tableID,
-                                      userName: widget.userName)));
+                                      userName: userName)));
                         },
                         child: Container(
                           decoration: BoxDecoration(
