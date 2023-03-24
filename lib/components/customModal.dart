@@ -17,11 +17,10 @@ class _CustomModalState extends State<CustomModal> {
   changeTable() {
     try {
       Services.changeTable(widget.orderID, value!).then((result) {
-        print(result);
         if (result) {
-          Navigator.pop(context);
-          //SVUOTA ARRAY DEI PRODOTTI
-          details = [];
+          setState(() {
+            Navigator.pop(context);
+          });
         } else {
           showDialog(
               context: context,
@@ -42,6 +41,18 @@ class _CustomModalState extends State<CustomModal> {
     } catch (e) {}
   }
 
+  String color = '';
+
+  getTableColour(index) {
+    for (var element in orders) {
+      if (element['table_id'] == tables[index]['id']) {
+        String color = element['order_state']['state_colour'];
+
+        return color;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -53,11 +64,18 @@ class _CustomModalState extends State<CustomModal> {
             (index) => InkWell(
                   onTap: () {
                     value = tables[index]['id'];
-                    changeTable();
+                    // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
+                    if (getTableColour(index) == null ||
+                        getTableColour(index) == '#4BC59E') {
+                      changeTable();
+                    }
+                    setState(() {});
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                        color: HexColor('#4BC59E'),
+                        color: HexColor(getTableColour(index) != null
+                            ? getTableColour(index)
+                            : '#4BC59E'),
                         borderRadius: BorderRadius.circular(8)),
                     margin:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 10),

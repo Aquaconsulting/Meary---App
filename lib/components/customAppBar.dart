@@ -31,27 +31,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Container(
-            //   margin: const EdgeInsets.only(left: 18),
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(22),
-            //     color: HexColor('#002115'),
-            //   ),
-            //   width: 34,
-            //   height: 34,
-            //   child: IconButton(
-            //       color: Colors.white,
-            //       iconSize: 16,
-            //       onPressed: () {},
-            //       icon: const Icon(Icons.arrow_back_ios_new_rounded)),
-            // ),
-
             InkWell(
               onTap: () {
                 Navigator.pop(context);
               },
               child: Container(
-                margin: EdgeInsets.only(left: 20),
+                margin: const EdgeInsets.only(left: 20),
                 child: Image.asset(
                   'assets/images/back.png',
                   scale: 1,
@@ -63,57 +48,64 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               scale: 2,
             ),
             Container(
-              margin: EdgeInsets.only(right: 22),
-              height: 28,
-              width: 28,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: HexColor('#002115'),
-                        ),
-                        width: 12,
-                        height: 12,
-                      ),
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: HexColor('#43ABFB'),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: HexColor('#002115'),
-                        ),
-                      ),
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: HexColor('#002115'),
-                        ),
-                      )
-                    ],
-                  )
-                ],
+              margin: const EdgeInsets.only(right: 20),
+              child: Image.asset(
+                'assets/images/appbarSquare.png',
+                scale: 1.1,
               ),
-            )
+            ),
+            // Container(
+            //   margin: EdgeInsets.only(right: 22),
+            //   height: 28,
+            //   width: 28,
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Container(
+            //             decoration: BoxDecoration(
+            //               borderRadius: BorderRadius.circular(3),
+            //               color: HexColor('#002115'),
+            //             ),
+            //             width: 12,
+            //             height: 12,
+            //           ),
+            //           Container(
+            //             width: 12,
+            //             height: 12,
+            //             decoration: BoxDecoration(
+            //               borderRadius: BorderRadius.circular(3),
+            //               color: HexColor('#43ABFB'),
+            //             ),
+            //           )
+            //         ],
+            //       ),
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Container(
+            //             width: 12,
+            //             height: 12,
+            //             decoration: BoxDecoration(
+            //               borderRadius: BorderRadius.circular(3),
+            //               color: HexColor('#002115'),
+            //             ),
+            //           ),
+            //           Container(
+            //             width: 12,
+            //             height: 12,
+            //             decoration: BoxDecoration(
+            //               borderRadius: BorderRadius.circular(3),
+            //               color: HexColor('#002115'),
+            //             ),
+            //           )
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // )
           ],
         ),
       ),

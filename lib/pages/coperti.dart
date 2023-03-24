@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meari/components/customModal.dart';
-import 'package:meari/pages/orders/detail.dart';
+import 'package:meari/constant.dart';
+import 'package:meari/pages/orders/chooseCategory.dart';
 
 class AddPlace extends StatefulWidget {
   AddPlace(
@@ -27,6 +28,8 @@ class AddPlace extends StatefulWidget {
 
 class _AddPlaceState extends State<AddPlace> {
   int counter = 0;
+  int coperti = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,7 +147,7 @@ class _AddPlaceState extends State<AddPlace> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          counter == 0 ? null : counter--;
+                          coperti == 0 ? null : coperti--;
                         });
                       },
                       child: Image.asset(
@@ -155,7 +158,7 @@ class _AddPlaceState extends State<AddPlace> {
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        '$counter',
+                        '$coperti',
                         style: TextStyle(
                             fontSize: 32, fontWeight: FontWeight.w800),
                       ),
@@ -163,7 +166,7 @@ class _AddPlaceState extends State<AddPlace> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          counter++;
+                          coperti++;
                         });
                       },
                       child: Image.asset(
@@ -191,7 +194,11 @@ class _AddPlaceState extends State<AddPlace> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 15),
                           backgroundColor: HexColor('#FF3131')),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          coperti = 0;
+                        });
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -226,8 +233,10 @@ class _AddPlaceState extends State<AddPlace> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => CreateDetail(
-                              userName: widget.userName,
-                              userID: widget.userID,
+                              orderDetail: [],
+                              coperti: coperti,
+                              tableID: widget.tableID,
+                              userID: userID!,
                               orderID: widget.orderID,
                               orderStateID: 1,
                               products: widget.products,

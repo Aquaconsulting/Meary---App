@@ -106,11 +106,26 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 200,
+                  height: 160,
+                ),
+                Image.asset(
+                  'assets/images/logoxl.png',
+                  scale: 1.4,
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    'Accedi',
+                    style: TextStyle(fontSize: 24, color: HexColor('#002115')),
+                  ),
                 ),
                 const Divider(color: Colors.black),
                 const SizedBox(
                   height: 12,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  child: Text(errorMessage != '' ? errorMessage : ''),
                 ),
                 Form(
                     // autovalidateMode: AutovalidateMode.always,
@@ -250,10 +265,6 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: TextDecoration.underline,
                       ),
                     )),
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: Text(errorMessage != '' ? errorMessage : ''),
-                )
               ],
             ),
           ),

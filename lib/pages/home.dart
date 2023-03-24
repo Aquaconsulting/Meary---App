@@ -11,6 +11,7 @@ import 'package:meari/components/customAppBar.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/orders/create.dart';
 import 'package:meari/pages/login.dart';
+import 'package:meari/pages/orders/index.dart';
 import 'package:meari/pages/orders/update.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -54,13 +55,15 @@ class _HomeState extends State<Home> {
   bool apiHasError = false;
   //funzione per chiamata api
   Future<Map<String, dynamic>> fetchData() async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    userName = pre.getString('name')!;
     String token = await API().getToken();
     var url = 'http://10.0.2.2:8000/api/apiData';
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
     });
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 200));
     loading = false;
     final Map<String, dynamic> parsed = json.decode(response.body);
     return parsed;
@@ -79,6 +82,7 @@ class _HomeState extends State<Home> {
       products = homePageData['products'];
       categories = homePageData['categories'];
       orderDetails = homePageData['order_details'];
+      defaultOrderState = homePageData['default'][0];
     } on TimeoutException catch (_) {
       apiHasError = true;
       errorMessage = 'Tempo scaduto, riprovare';
@@ -103,6 +107,7 @@ class _HomeState extends State<Home> {
     super.initState();
     getUserData();
     loadData();
+    userID = widget.userID;
   }
 
   @override
@@ -116,9 +121,19 @@ class _HomeState extends State<Home> {
               //se la chiamata http è andata in crash allora si vedrà il messaggio d'errore, altrimenti la listView-
               child: apiHasError
                   ? Center(
-                      child: Text(
-                        errorMessage,
-                        style: const TextStyle(fontSize: 14),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            errorMessage,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                logout();
+                              },
+                              child: Text('LOGOUT'))
+                        ],
                       ),
                     )
                   : Align(
@@ -131,9 +146,6 @@ class _HomeState extends State<Home> {
                           children: [
                             InkWell(
                               onTap: () async {
-                                SharedPreferences pre =
-                                    await SharedPreferences.getInstance();
-                                String name = pre.getString('name')!;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -142,7 +154,7 @@ class _HomeState extends State<Home> {
                                             tables: homePageData['tables'],
                                             products: products,
                                             categories: categories,
-                                            userName: name)));
+                                            userName: userName)));
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -169,35 +181,38 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: HexColor('##67CDFD'),
-                                  borderRadius: BorderRadius.circular(10)),
-                              width: MediaQuery.of(context).size.width,
-                              height: 170,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    margin:
-                                        EdgeInsets.only(top: 15, bottom: 22),
-                                    child: Image.asset(
-                                      'assets/images/paper.png',
-                                      scale: 2,
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => OrderList()));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: HexColor('##67CDFD'),
+                                    borderRadius: BorderRadius.circular(10)),
+                                width: MediaQuery.of(context).size.width,
+                                height: 170,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 15, bottom: 22),
+                                      child: Image.asset(
+                                        'assets/images/paper.png',
+                                        scale: 2,
+                                      ),
                                     ),
-                                  ),
-                                  const Text(
-                                    'ELENCO COMANDE',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 25),
-                                  )
-                                ],
+                                    const Text(
+                                      'ELENCO COMANDE',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 25),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  logout();
-                                },
-                                child: Text('sda'))
                           ],
                         ),
                       ),
