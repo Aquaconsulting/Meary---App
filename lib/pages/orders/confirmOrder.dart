@@ -28,16 +28,18 @@ class HexColor extends Color {
 class _ConfirmOrderState extends State<ConfirmOrder> {
   double totalPrice = 0;
   getTotalPrice() {
-    for (var element in widget.orderDetail) {
-      var counting = element.price * element.quantity;
-      totalPrice = totalPrice + counting;
-    }
-    return totalPrice;
+    // for (var element in widget.orderDetail) {
+    //   double counting = double.parse(element['price']) * element['quantity'];
+
+    //   totalPrice = totalPrice + counting;
+    // }
+    // return totalPrice;
+    return 2.3;
   }
 
   getProductName(x) {
     for (var element in products) {
-      if (element['id'] == x.product_id) {
+      if (element['id'] == x['product_id']) {
         return element['name'];
       }
     }
@@ -52,8 +54,6 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Dettaglio ordine creato con successo'),
           ));
-          //SVUOTA ARRAY DEI PRODOTTI
-          details = [];
         } else {
           showDialog(
               context: context,
@@ -276,7 +276,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700)),
                                     Text(
-                                      'Quantità ${widget.orderDetail[index].quantity}',
+                                      'Quantità ${widget.orderDetail[index]['quantity']}',
                                       style: TextStyle(
                                           fontSize: 14,
                                           color: HexColor('#A1C2C5'),
@@ -287,7 +287,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                 subtitle: Container(
                                   margin: EdgeInsets.only(top: 30),
                                   child: Text(
-                                    '€${widget.orderDetail[index].price}',
+                                    '€${widget.orderDetail[index]['price']}',
                                     style: TextStyle(
                                         color: HexColor('#43ABFB'),
                                         fontWeight: FontWeight.w600),
@@ -319,7 +319,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 18, vertical: 15),
                               backgroundColor: HexColor('#43ABFB')),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                           child: Row(
                             children: [
                               Container(

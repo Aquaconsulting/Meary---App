@@ -21,8 +21,8 @@ class ShowCategory extends StatefulWidget {
       required this.category,
       required this.orderDetail});
   String userName;
-  List orderDetail;
   int orderID;
+  List orderDetail;
   int tableID;
   int coperti;
   dynamic category;
@@ -172,23 +172,21 @@ class _ShowCategoryState extends State<ShowCategory> {
                 widget.filteredProducts.length,
                 (index) => InkWell(
                       onTap: () {
-                        // CHECK SE IL PRODOTTO GIA ESISTE NELL'ARRAY DEI DETTAGLI
-                        print(widget.orderDetail);
-
-                        // create:  [{order_id: 158, order_state_id: 3, price: 12.0, quantity: 3, product_id: 1}, {order_id: 158, order_state_id: 3, price: 3.0, quantity: 2, product_id: 3}]
-                        //  update:  [{id: 57, order_id: 137, product_id: 1, note: asd22444, quantity: 5, price: 12.00, order_state_id: 3, created_at: 2023-03-24T10:28:33.000000Z, updated_at: 2023-03-24T10:28:33.000000Z, order: {id: 137, user_id: 6, table_id: 9, date: 2023-03-24 10:26:54, note: fix this, order_state_id: 3, created_at: 2023-03-24T10:26:55.000000Z, updated_at: 2023-03-24T10:26:55.000000Z}}]
-                        var newItem = OrderDetail(
-                            widget.orderID,
-                            defaultOrderState!,
-                            double.parse(
-                                widget.filteredProducts[index]['price']),
-                            1,
-                            widget.filteredProducts[index]['id']);
+                        var newItem = {
+                          'order_id': widget.orderID,
+                          'order_state_id': defaultOrderState,
+                          'price': double.parse(
+                              widget.filteredProducts[index]['price']),
+                          'quantity': 1,
+                          'product_id': widget.filteredProducts[index]['id']
+                        };
+                        //CHECK SE IL PRODOTTO GIA E' PRESENTE NELL'ORDINE
                         var existingItem = widget.orderDetail.firstWhere(
                             (itemToCheck) =>
-                                itemToCheck['product_id'] == newItem.product_id,
+                                itemToCheck['product_id'] ==
+                                newItem['product_id'],
                             orElse: () => null);
-                        // SE ESISTE NON AGGIUNGERLO DI NUOVO
+                        // SE NON ESISTE AGGIUNGI
                         if (existingItem == null) {
                           widget.orderDetail.add(newItem);
                         }

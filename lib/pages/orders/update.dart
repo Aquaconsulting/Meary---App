@@ -436,13 +436,13 @@ class _UpdateOrderState extends State<UpdateOrder> {
               InkWell(
                 onTap: () {
                   print(widget.orderDetail);
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => ConfirmUpdate(
-                  //               order: widget.order,
-                  //               orderDetail: widget.orderDetail,
-                  //             )));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ConfirmUpdate(
+                                order: widget.order,
+                                orderDetail: widget.orderDetail,
+                              )));
                 },
                 child: Container(
                   decoration: BoxDecoration(

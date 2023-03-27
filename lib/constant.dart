@@ -1,7 +1,6 @@
 import 'package:meari/pages/orders/confirmProduct.dart';
 import 'package:meari/pages/orders/chooseCategory.dart';
 
-List details = [];
 Map<dynamic, dynamic> homePageData = {};
 List orders = [];
 List products = [];
