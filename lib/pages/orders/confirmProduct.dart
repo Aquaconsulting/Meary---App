@@ -351,7 +351,9 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                             content: TextFormField(
                                               initialValue: '',
                                               onChanged: (value) {
-                                                // note = value;
+                                                //ASSEGNA IL VALORE DEL TEXT FIELD ALLE NOTE DEL PRODOTTO
+                                                // widget.orderDetail[index]
+                                                //     ['note'] = value;
                                                 Navigator.pop(context);
                                               },
                                               maxLines: 10,
@@ -373,7 +375,10 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                           backgroundColor:
                                                               HexColor(
                                                                   '#CDD4D9')),
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        //SE L'UTENTE CLICCA CONFERMA LE NOTE SARANNO UGUALI AL VALORE DEL TEXTFIELD
+                                                        Navigator.pop(context);
+                                                      },
                                                       icon: Image.asset(
                                                         'assets/images/pen3.png',
                                                       ),
@@ -395,6 +400,9 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                               HexColor(
                                                                   '#43ABFB')),
                                                       onPressed: () {
+                                                        //SE L'UTENTE CLICCA INDIETRO LE NOTE SARANNO VUOTE
+                                                        widget.orderDetail[
+                                                            index]['note'] = '';
                                                         Navigator.pop(context);
                                                       },
                                                       icon: const Icon(

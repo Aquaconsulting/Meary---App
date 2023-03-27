@@ -93,7 +93,7 @@ class Services {
   }
 
 // STORE ORDER DETAIL
-  static Future<dynamic> addOrderDetail(List details, String note) async {
+  static Future<dynamic> addOrderDetail(List details) async {
     String token = await API().getToken();
 
     List<Map<String, dynamic>>? finalDetail = [];
@@ -102,7 +102,7 @@ class Services {
         {
           "order_id": "${details[i]['order_id']}",
           "product_id": "${details[i]['product_id']}",
-          "note": note,
+          "note": "${details[i]['note']}",
           "quantity": "${details[i]['quantity']}",
           "price": "${details[i]['price']}",
           "order_state_id": "${details[i]['order_state_id']}"

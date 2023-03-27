@@ -57,7 +57,7 @@ class _AddPlaceState extends State<AddPlace> {
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        Text(DateTime.now().toString())
+                        Text(today)
                       ]),
                 ),
                 Row(

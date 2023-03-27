@@ -369,7 +369,20 @@ class _UpdateOrderState extends State<UpdateOrder> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               InkWell(
-                onTap: () => Navigator.pop(context),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateDetail(
+                              tableID: widget.order['table_id'],
+                              userID: userID!,
+                              orderID: widget.order['id'],
+                              orderStateID: defaultOrderState!,
+                              products: products,
+                              categories: categories,
+                              coperti: 12,
+                              orderDetail: widget.orderDetail)));
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
@@ -435,7 +448,6 @@ class _UpdateOrderState extends State<UpdateOrder> {
               ),
               InkWell(
                 onTap: () {
-                  print(widget.orderDetail);
                   Navigator.push(
                       context,
                       MaterialPageRoute(

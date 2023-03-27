@@ -47,7 +47,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
 
   addOrderDetail() {
     try {
-      Services.addOrderDetail(widget.orderDetail, 'tofix').then((result) {
+      Services.addOrderDetail(widget.orderDetail).then((result) {
         if (result) {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => Home(userID: userID!)));
