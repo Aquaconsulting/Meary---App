@@ -110,6 +110,7 @@ class _OrderListState extends State<OrderList> {
                                             color: Colors.white)),
                                     InkWell(
                                       onTap: () {
+                                        print(orderDetails);
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(

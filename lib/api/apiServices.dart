@@ -100,12 +100,12 @@ class Services {
     finalDetail = [
       for (int i = 0; i < details.length; i++)
         {
-          "order_id": "${details[i].order_id}",
-          "product_id": "${details[i].product_id}",
+          "order_id": "${details[i]['order_id']}",
+          "product_id": "${details[i]['product_id']}",
           "note": note,
-          "quantity": "${details[i].quantity}",
-          "price": "${details[i].price}",
-          "order_state_id": "${details[i].order_state_id}"
+          "quantity": "${details[i]['quantity']}",
+          "price": "${details[i]['price']}",
+          "order_state_id": "${details[i]['order_state_id']}"
         }
     ];
     try {

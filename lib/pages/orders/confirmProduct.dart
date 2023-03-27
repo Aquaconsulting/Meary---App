@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:meari/components/customAppBar.dart';
 import 'package:meari/components/customModal.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/orders/chooseCategory.dart';
@@ -56,7 +55,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
 
   getProductName(x) {
     for (var element in products) {
-      if (element['id'] == x.product_id) {
+      if (element['id'] == x['product_id']) {
         return element['name'];
       }
     }
@@ -195,7 +194,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                             Column(
                               children: [
                                 Text(
-                                  'Qtà ${widget.orderDetail[index].quantity}',
+                                  'Qtà ${widget.orderDetail[index]['quantity']}',
                                   style: TextStyle(
                                       color: HexColor('#A1C2C5'),
                                       fontWeight: FontWeight.w800,
@@ -205,7 +204,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                   height: 10,
                                 ),
                                 Text(
-                                  '€${widget.orderDetail[index].price}',
+                                  '€${widget.orderDetail[index]['price']}',
                                   style: TextStyle(
                                       color: HexColor('#43ABFB'),
                                       fontWeight: FontWeight.w700,
@@ -269,9 +268,9 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  widget.orderDetail[index].quantity == 1
+                                  widget.orderDetail[index]['quantity'] == 1
                                       ? null
-                                      : widget.orderDetail[index].quantity--;
+                                      : widget.orderDetail[index]['quantity']--;
                                 });
                               },
                               child: Image.asset(
@@ -283,7 +282,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
-                                '${widget.orderDetail[index].quantity}',
+                                '${widget.orderDetail[index]['quantity']}',
                                 style: const TextStyle(
                                     fontSize: 32, fontWeight: FontWeight.w800),
                               ),
@@ -291,7 +290,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  widget.orderDetail[index].quantity++;
+                                  widget.orderDetail[index]['quantity']++;
                                 });
                               },
                               child: Image.asset(
