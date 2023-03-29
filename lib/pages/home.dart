@@ -116,7 +116,10 @@ class _HomeState extends State<Home> {
       backgroundColor: HexColor('#F4F3F3'),
       appBar: CustomAppBar(),
       body: loading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+              child: CircularProgressIndicator(
+              color: HexColor('#002115'),
+            ))
           : Container(
               //se la chiamata http è andata in crash allora si vedrà il messaggio d'errore, altrimenti la listView-
               child: apiHasError

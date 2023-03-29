@@ -48,6 +48,7 @@ class _ShowCategoryState extends State<ShowCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: HexColor('#F4F3F3'),
         appBar: CustomAppBar(),
         body: SingleChildScrollView(

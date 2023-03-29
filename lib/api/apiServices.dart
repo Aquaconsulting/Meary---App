@@ -102,7 +102,9 @@ class Services {
         {
           "order_id": "${details[i]['order_id']}",
           "product_id": "${details[i]['product_id']}",
-          "note": "${details[i]['note']}",
+          "note": details[i]['note'] == null
+              ? 'Nessuna nota inserita'
+              : "${details[i]['note']}",
           "quantity": "${details[i]['quantity']}",
           "price": "${details[i]['price']}",
           "order_state_id": "${details[i]['order_state_id']}"
@@ -117,7 +119,6 @@ class Services {
         },
         body: jsonEncode(<String, dynamic>{"orderData": finalDetail}),
       );
-
       json.decode(response.body);
       return true;
     } catch (e) {
@@ -126,7 +127,7 @@ class Services {
   }
 
   // UPDATE ORDER DETAIL
-  static Future<dynamic> updateOrderDetail(List details, String note) async {
+  static Future<dynamic> updateOrderDetail(List details) async {
     String token = await API().getToken();
     List<Map<String, dynamic>>? finalDetail = [];
     finalDetail = [
@@ -135,7 +136,7 @@ class Services {
           "id": "${details[i]['id']}",
           "order_id": "${details[i]['order_id']}",
           "product_id": "${details[i]['product_id']}",
-          "note": note,
+          "note": "${details[i]['note']}",
           "quantity": "${details[i]['quantity']}",
           "price": "${details[i]['price']}",
           "order_state_id": "${details[i]['order_state_id']}"
@@ -151,6 +152,23 @@ class Services {
         body: jsonEncode(<String, dynamic>{"orderData": finalDetail}),
       );
 
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // DELETE ORDER DETAIL
+  static Future<dynamic> deleteOrderDetail(int id) async {
+    String token = await API().getToken();
+    try {
+      final response = await http.delete(
+        Uri.parse('http://10.0.2.2:8000/api/order_details/$id'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+      );
       return true;
     } catch (e) {
       return false;

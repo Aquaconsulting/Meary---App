@@ -52,7 +52,7 @@ class OrderDetail {
 
 class _ConfirmProductState extends State<ConfirmProduct> {
   int counter = 1;
-
+  TextEditingController suca = TextEditingController();
   getProductName(x) {
     for (var element in products) {
       if (element['id'] == x['product_id']) {
@@ -349,12 +349,12 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                             title: const Text(
                                                 'INSERISCI NOTE PRODOTTO.'),
                                             content: TextFormField(
-                                              initialValue: '',
+                                              initialValue: widget
+                                                  .orderDetail[index]['note'],
                                               onChanged: (value) {
                                                 //ASSEGNA IL VALORE DEL TEXT FIELD ALLE NOTE DEL PRODOTTO
-                                                // widget.orderDetail[index]
-                                                //     ['note'] = value;
-                                                Navigator.pop(context);
+                                                widget.orderDetail[index]
+                                                    ['note'] = value;
                                               },
                                               maxLines: 10,
                                             ),
@@ -400,7 +400,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                               HexColor(
                                                                   '#43ABFB')),
                                                       onPressed: () {
-                                                        //SE L'UTENTE CLICCA INDIETRO LE NOTE SARANNO VUOTE
+                                                        //SE L'UTENTE CLICCA CANCELLA LE NOTE SARANNO VUOTE
                                                         widget.orderDetail[
                                                             index]['note'] = '';
                                                         Navigator.pop(context);
@@ -410,7 +410,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                         color: Colors.white,
                                                       ),
                                                       label: const Text(
-                                                        'INDIETRO',
+                                                        'CANCELLA',
                                                         style: TextStyle(
                                                             color:
                                                                 Colors.white),
@@ -545,7 +545,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                       'COMANDA',
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.w800),
-                    )
+                    ),
                   ],
                 ),
               ),

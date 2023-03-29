@@ -28,13 +28,15 @@ class HexColor extends Color {
 class _ConfirmOrderState extends State<ConfirmOrder> {
   double totalPrice = 0;
   getTotalPrice() {
-    // for (var element in widget.orderDetail) {
-    //   double counting = double.parse(element['price']) * element['quantity'];
-
-    //   totalPrice = totalPrice + counting;
+    // double orderPrice = 0;
+    // for (var element in orderDetails) {
+    //   if (element['order_id'] == orders[index]['id']) {
+    //     dynamic counter = double.parse(element['price']) * element['quantity'];
+    //     orderPrice = counter + orderPrice;
+    //   }
     // }
-    // return totalPrice;
-    return 2.3;
+    // return orderPrice;
+    return 2;
   }
 
   getProductName(x) {
