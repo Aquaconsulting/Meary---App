@@ -27,15 +27,15 @@ class HexColor extends Color {
 }
 
 class _OrderListState extends State<OrderList> {
-  double orderPrice = 0;
   getOrderPrice(int index) {
+    double orderPrice = 0;
     for (var element in orderDetails) {
       if (element['order_id'] == orders[index]['id']) {
         dynamic counter = double.parse(element['price']) * element['quantity'];
         orderPrice = counter + orderPrice;
-        return orderPrice;
       }
     }
+    return orderPrice;
   }
 
   @override
@@ -99,13 +99,13 @@ class _OrderListState extends State<OrderList> {
                                   children: [
                                     const Text('COMANDA',
                                         style: TextStyle(
-                                            fontSize: 28,
+                                            fontSize: 25,
                                             fontWeight: FontWeight.w300,
                                             color: Colors.white)),
                                     const Text('  '),
                                     Text('ID-${orders[index]['id']}',
                                         style: const TextStyle(
-                                            fontSize: 28,
+                                            fontSize: 25,
                                             fontWeight: FontWeight.w700,
                                             color: Colors.white)),
                                     InkWell(
@@ -172,7 +172,6 @@ class _OrderListState extends State<OrderList> {
                                                                             'id'])
                                                                     .then(
                                                                         (result) {
-                                                                  print(result);
                                                                   if (result) {
                                                                     Navigator.push(
                                                                         context,
@@ -264,7 +263,8 @@ class _OrderListState extends State<OrderList> {
                               Row(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(left: 10, right: 5),
+                                    margin: const EdgeInsets.only(
+                                        left: 10, right: 5),
                                     child: Text('€',
                                         style: TextStyle(
                                             color: HexColor('#43ABFB'),

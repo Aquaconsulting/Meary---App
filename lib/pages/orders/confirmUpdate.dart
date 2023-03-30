@@ -27,8 +27,8 @@ class HexColor extends Color {
 }
 
 class _ConfirmUpdateState extends State<ConfirmUpdate> {
-  double totalPrice = 0;
   getTotalPrice() {
+    double totalPrice = 0;
     for (var element in orderDetails) {
       var counting = double.parse(element['price']) * element['quantity'];
       totalPrice = totalPrice + counting;
@@ -46,7 +46,7 @@ class _ConfirmUpdateState extends State<ConfirmUpdate> {
 
   updateOrderDetail() {
     try {
-      Services.updateOrderDetail(widget.orderDetail, 'asd22444').then((result) {
+      Services.updateOrderDetail(widget.orderDetail).then((result) {
         if (result != false) {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => Home(userID: userID!)));
@@ -78,6 +78,7 @@ class _ConfirmUpdateState extends State<ConfirmUpdate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: HexColor('#F4F3F3'),
       body: Column(
         children: [
@@ -148,7 +149,8 @@ class _ConfirmUpdateState extends State<ConfirmUpdate> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    getTotalPrice().toString(),
+                                    // getTotalPrice().toString(),
+                                    'asd',
                                     style: TextStyle(
                                         color: HexColor('#43ABFB'),
                                         fontWeight: FontWeight.w700,

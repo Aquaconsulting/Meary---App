@@ -9,13 +9,13 @@ import 'package:meari/pages/orders/confirmOrder.dart';
 class ConfirmProduct extends StatefulWidget {
   ConfirmProduct(
       {super.key,
-      required this.orderID,
+      required this.order,
       required this.tableID,
       required this.userName,
       required this.coperti,
       required this.orderDetail});
   String userName;
-  int orderID;
+  dynamic order;
   int tableID;
   int coperti;
   List orderDetail;
@@ -35,24 +35,23 @@ class HexColor extends Color {
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
 
-class OrderDetail {
-  int order_id;
-  int order_state_id;
-  double price;
-  int quantity;
-  int product_id;
-  OrderDetail(this.order_id, this.order_state_id, this.price, this.quantity,
-      this.product_id);
+// class OrderDetail {
+//   int order_id;
+//   int order_state_id;
+//   double price;
+//   int quantity;
+//   int product_id;
+//   OrderDetail(this.order_id, this.order_state_id, this.price, this.quantity,
+//       this.product_id);
 
-  @override
-  String toString() {
-    return '{order_id: $order_id, order_state_id: $order_state_id, price: $price, quantity: $quantity, product_id: $product_id}';
-  }
-}
+//   @override
+//   String toString() {
+//     return '{order_id: $order_id, order_state_id: $order_state_id, price: $price, quantity: $quantity, product_id: $product_id}';
+//   }
+// }
 
 class _ConfirmProductState extends State<ConfirmProduct> {
   int counter = 1;
-
   getProductName(x) {
     for (var element in products) {
       if (element['id'] == x['product_id']) {
@@ -122,7 +121,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                     showDialog(
                         context: context,
                         builder: (context) => CustomModal(
-                              orderID: widget.orderID,
+                              orderID: widget.order['id'],
                             ));
                   },
                   child: const Text('CAMBIA TAVOLO')),
@@ -349,12 +348,12 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                             title: const Text(
                                                 'INSERISCI NOTE PRODOTTO.'),
                                             content: TextFormField(
-                                              initialValue: '',
+                                              initialValue: widget
+                                                  .orderDetail[index]['note'],
                                               onChanged: (value) {
                                                 //ASSEGNA IL VALORE DEL TEXT FIELD ALLE NOTE DEL PRODOTTO
-                                                // widget.orderDetail[index]
-                                                //     ['note'] = value;
-                                                Navigator.pop(context);
+                                                widget.orderDetail[index]
+                                                    ['note'] = value;
                                               },
                                               maxLines: 10,
                                             ),
@@ -400,7 +399,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                               HexColor(
                                                                   '#43ABFB')),
                                                       onPressed: () {
-                                                        //SE L'UTENTE CLICCA INDIETRO LE NOTE SARANNO VUOTE
+                                                        //SE L'UTENTE CLICCA CANCELLA LE NOTE SARANNO VUOTE
                                                         widget.orderDetail[
                                                             index]['note'] = '';
                                                         Navigator.pop(context);
@@ -410,7 +409,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                         color: Colors.white,
                                                       ),
                                                       label: const Text(
-                                                        'INDIETRO',
+                                                        'CANCELLA',
                                                         style: TextStyle(
                                                             color:
                                                                 Colors.white),
@@ -487,7 +486,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                             orderDetail: widget.orderDetail,
                             tableID: widget.tableID,
                             userID: userID!,
-                            orderID: widget.orderID,
+                            order: widget.order,
                             orderStateID: defaultOrderState!,
                             products: products,
                             categories: categories,
@@ -523,6 +522,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ConfirmOrder(
+                              order: widget.order,
                               orderDetail: widget.orderDetail,
                             )));
               },
@@ -545,7 +545,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                       'COMANDA',
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.w800),
-                    )
+                    ),
                   ],
                 ),
               ),

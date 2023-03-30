@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:meari/api/apiServices.dart';
 import 'package:meari/components/customModal.dart';
 import 'package:meari/constant.dart';
+import 'package:meari/pages/home.dart';
 import 'package:meari/pages/orders/chooseCategory.dart';
 import 'package:meari/pages/orders/confirmOrder.dart';
 import 'package:meari/pages/orders/confirmUpdate.dart';
@@ -43,6 +45,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Container(
@@ -309,9 +312,115 @@ class _UpdateOrderState extends State<UpdateOrder> {
                                               horizontal: 22, vertical: 12),
                                           backgroundColor: HexColor('#FF3131')),
                                       onPressed: () {
-                                        setState(() {
-                                          widget.orderDetail.removeAt(index);
-                                        });
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                                  title: const Text(
+                                                      'Sei sicuro di voler eliminare questo prodotto?'),
+                                                  content: const Text(
+                                                      'Questa azione è irreversibile.'),
+                                                  actions: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        TextButton.icon(
+                                                            style: ElevatedButton.styleFrom(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        20,
+                                                                    vertical:
+                                                                        10),
+                                                                backgroundColor:
+                                                                    HexColor(
+                                                                        '#FF3131')),
+                                                            onPressed: () {
+                                                              try {
+                                                                Services.deleteOrderDetail(
+                                                                        widget.orderDetail[index]
+                                                                            [
+                                                                            'id'])
+                                                                    .then(
+                                                                        (result) {
+                                                                  if (result) {
+                                                                    //SE NON CI SONO ERRORI TORNA INDIETRO
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    //ELIMINA DAL DB E DALL'ARRAY DELL'APP QUESTO PRODOTTO
+                                                                    widget
+                                                                        .orderDetail
+                                                                        .removeAt(
+                                                                            index);
+                                                                    setState(
+                                                                        () {});
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(
+                                                                            const SnackBar(
+                                                                      content: Text(
+                                                                          'Prodotto eliminato.'),
+                                                                    ));
+                                                                  } else {
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder: (context) =>
+                                                                            AlertDialog(
+                                                                              title: const Text('Qualcosa è andato storto.'),
+                                                                              content: const Text('Controlla la tua connessione e riprova.'),
+                                                                              actions: [
+                                                                                TextButton(
+                                                                                    onPressed: (() {
+                                                                                      Navigator.pop(context);
+                                                                                    }),
+                                                                                    child: const Text('Chiudi'))
+                                                                              ],
+                                                                            ));
+                                                                  }
+                                                                });
+                                                              } catch (e) {}
+                                                            },
+                                                            icon: Image.asset(
+                                                                'assets/images/cestino.png'),
+                                                            label: const Text(
+                                                              'ELIMINA',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            )),
+                                                        TextButton.icon(
+                                                            style: ElevatedButton.styleFrom(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        10,
+                                                                    vertical:
+                                                                        10),
+                                                                backgroundColor:
+                                                                    HexColor(
+                                                                        '#43ABFB')),
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            icon: const Icon(
+                                                              Icons
+                                                                  .arrow_back_sharp,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            label: const Text(
+                                                              'INDIETRO',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ))
+                                                      ],
+                                                    )
+                                                  ],
+                                                ));
                                       },
                                       child: Row(
                                         children: [
@@ -335,7 +444,84 @@ class _UpdateOrderState extends State<UpdateOrder> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 22, vertical: 12),
                                           backgroundColor: HexColor('#EBEBEB')),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                                  title: const Text(
+                                                      'INSERISCI NOTE PRODOTTO.'),
+                                                  content: TextFormField(
+                                                    initialValue: widget
+                                                            .orderDetail[index]
+                                                        ['note'],
+                                                    onChanged: (value) {
+                                                      //ASSEGNA IL VALORE DEL TEXT FIELD ALLE NOTE DEL PRODOTTO
+                                                      widget.orderDetail[index]
+                                                          ['note'] = value;
+                                                    },
+                                                    maxLines: 10,
+                                                  ),
+                                                  actions: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        TextButton.icon(
+                                                            style: ElevatedButton.styleFrom(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        20,
+                                                                    vertical:
+                                                                        10),
+                                                                backgroundColor:
+                                                                    HexColor(
+                                                                        '#CDD4D9')),
+                                                            onPressed: () {
+                                                              //SE L'UTENTE CLICCA CONFERMA LE NOTE SARANNO UGUALI AL VALORE DEL TEXTFIELD
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            icon: Image.asset(
+                                                              'assets/images/pen3.png',
+                                                            ),
+                                                            label: const Text(
+                                                              'CONFERM',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            )),
+                                                        TextButton(
+                                                            style: ElevatedButton.styleFrom(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        10,
+                                                                    vertical:
+                                                                        10),
+                                                                backgroundColor:
+                                                                    HexColor(
+                                                                        '#43ABFB')),
+                                                            onPressed: () {
+                                                              //SE L'UTENTE CLICCA CANCELLA LE NOTE SARANNO VUOTE
+                                                              widget.orderDetail[
+                                                                      index]
+                                                                  ['note'] = '';
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                              'CANCELLA',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ))
+                                                      ],
+                                                    )
+                                                  ],
+                                                ));
+                                      },
                                       child: Row(
                                         children: [
                                           const Text(
@@ -364,7 +550,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
         ],
       ),
       bottomNavigationBar: Container(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: const EdgeInsets.only(bottom: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -376,7 +562,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                           builder: (context) => CreateDetail(
                               tableID: widget.order['table_id'],
                               userID: userID!,
-                              orderID: widget.order['id'],
+                              order: widget.order,
                               orderStateID: defaultOrderState!,
                               products: products,
                               categories: categories,
@@ -415,7 +601,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                           builder: (context) => CreateDetail(
                               tableID: widget.order['table_id'],
                               userID: userID!,
-                              orderID: widget.order['id'],
+                              order: widget.order,
                               orderStateID: defaultOrderState!,
                               products: products,
                               categories: categories,
@@ -451,9 +637,9 @@ class _UpdateOrderState extends State<UpdateOrder> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ConfirmUpdate(
-                                order: widget.order,
+                          builder: (context) => ConfirmOrder(
                                 orderDetail: widget.orderDetail,
+                                order: widget.order,
                               )));
                 },
                 child: Container(

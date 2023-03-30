@@ -17,3 +17,5 @@ var yy = date.year;
 var hh = date.hour;
 var min = date.minute;
 String today = '$yy/$mm/$day - $hh:$min';
+//USANDO LA STESSA PAGINA DI CONFERMA PER UPDATE E STORE QUESTA VARIABILE SERVER PER STABILIRE LA ROTTA DA USARE
+bool confirmUpdate = false;

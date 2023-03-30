@@ -52,15 +52,16 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   Object currentItem = {};
   TextEditingController noteController = TextEditingController();
   List tables = [];
-  int? orderID;
+  dynamic order;
   addOrder() {
     try {
-      Services.addOrder(widget.userID, value!, 'fix this', DateTime.now(),
+      Services.addOrder(widget.userID, value!, 'nessuna nota', DateTime.now(),
               defaultOrderState!)
           .then((result) {
+        print(result);
         if (result != false) {
           //SE LA L'API RITORNA L'OGGETTO PRENDO ID DELL'ORDINE APPENA CREATO E LO PASSO ALLA PAGINA SUCCESSIVA
-          orderID = result['id'];
+          order = result;
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -68,7 +69,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         tableID: value!,
                         userName: widget.userName,
                         userID: widget.userID,
-                        orderID: orderID!,
+                        order: order,
                         orderStateID: 1,
                         products: widget.products,
                         categories: widget.categories,
