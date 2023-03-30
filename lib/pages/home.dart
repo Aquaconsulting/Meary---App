@@ -149,6 +149,8 @@ class _HomeState extends State<Home> {
                           children: [
                             InkWell(
                               onTap: () async {
+                                //USANDO LA STESSA PAGINA DI CONFERMA PER UPDATE E STORE QUESTA VARIABILE SERVER PER STABILIRE LA ROTTA DA USARE
+                                confirmUpdate = false;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -186,10 +188,13 @@ class _HomeState extends State<Home> {
                             ),
                             InkWell(
                               onTap: () {
+                                //USANDO LA STESSA PAGINA DI CONFERMA PER UPDATE E STORE QUESTA VARIABILE SERVER PER STABILIRE LA ROTTA DA USARE
+                                confirmUpdate = true;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => OrderList()));
+                                        builder: (context) =>
+                                            const OrderList()));
                               },
                               child: Container(
                                 decoration: BoxDecoration(

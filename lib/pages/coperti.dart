@@ -11,12 +11,12 @@ class AddPlace extends StatefulWidget {
       required this.tableID,
       required this.userName,
       required this.userID,
-      required this.orderID,
+      required this.order,
       required this.orderStateID,
       required this.products,
       required this.categories});
   String userName;
-  int orderID;
+  dynamic order;
   int userID;
   int tableID;
   int orderStateID;
@@ -94,7 +94,7 @@ class _AddPlaceState extends State<AddPlace> {
                           showDialog(
                               context: context,
                               builder: (context) => CustomModal(
-                                    orderID: widget.orderID,
+                                    orderID: widget.order['id'],
                                   ));
                         },
                         child: const Text('CAMBIA TAVOLO'))
@@ -237,7 +237,7 @@ class _AddPlaceState extends State<AddPlace> {
                               coperti: coperti,
                               tableID: widget.tableID,
                               userID: userID!,
-                              orderID: widget.orderID,
+                              order: widget.order,
                               orderStateID: 1,
                               products: widget.products,
                               categories: widget.categories,

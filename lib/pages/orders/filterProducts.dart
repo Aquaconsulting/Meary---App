@@ -14,14 +14,14 @@ class ShowCategory extends StatefulWidget {
   ShowCategory(
       {super.key,
       required this.coperti,
-      required this.orderID,
+      required this.order,
       required this.tableID,
       required this.userName,
       required this.filteredProducts,
       required this.category,
       required this.orderDetail});
   String userName;
-  int orderID;
+  dynamic order;
   List orderDetail;
   int tableID;
   int coperti;
@@ -44,7 +44,6 @@ class HexColor extends Color {
 }
 
 class _ShowCategoryState extends State<ShowCategory> {
-  final OrderDetail? orderdetail = null;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +105,7 @@ class _ShowCategoryState extends State<ShowCategory> {
                     showDialog(
                         context: context,
                         builder: (context) => CustomModal(
-                              orderID: widget.orderID,
+                              orderID: widget.order['id'],
                             ));
                   },
                   child: const Text('CAMBIA TAVOLO')),
@@ -174,7 +173,7 @@ class _ShowCategoryState extends State<ShowCategory> {
                 (index) => InkWell(
                       onTap: () {
                         var newItem = {
-                          'order_id': widget.orderID,
+                          'order_id': widget.order['id'],
                           'order_state_id': defaultOrderState,
                           'price': double.parse(
                               widget.filteredProducts[index]['price']),
@@ -197,7 +196,7 @@ class _ShowCategoryState extends State<ShowCategory> {
                                 builder: (context) => ConfirmProduct(
                                     orderDetail: widget.orderDetail,
                                     coperti: widget.coperti,
-                                    orderID: widget.orderID,
+                                    order: widget.order,
                                     tableID: widget.tableID,
                                     userName: widget.userName)));
                       },

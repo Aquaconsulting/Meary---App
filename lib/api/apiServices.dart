@@ -74,6 +74,7 @@ class Services {
     }
   }
 
+  // CHANGE TABLE
   static Future<dynamic> changeTable(int orderID, int value) async {
     String token = await API().getToken();
 
@@ -85,6 +86,25 @@ class Services {
           HttpHeaders.authorizationHeader: "Bearer $token"
         },
         body: jsonEncode(<String, dynamic>{'orderID': orderID, 'value': value}),
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //UPDATE NOTE
+  static Future<dynamic> updateNote(int orderID, String note) async {
+    String token = await API().getToken();
+
+    try {
+      final response = await http.put(
+        Uri.parse('http://10.0.2.2:8000/api/updateNote'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: jsonEncode(<String, dynamic>{'orderID': orderID, 'note': note}),
       );
       return true;
     } catch (e) {
@@ -136,7 +156,9 @@ class Services {
           "id": "${details[i]['id']}",
           "order_id": "${details[i]['order_id']}",
           "product_id": "${details[i]['product_id']}",
-          "note": "${details[i]['note']}",
+          "note": details[i]['note'] == null
+              ? 'Nessuna nota inserita'
+              : "${details[i]['note']}",
           "quantity": "${details[i]['quantity']}",
           "price": "${details[i]['price']}",
           "order_state_id": "${details[i]['order_state_id']}"

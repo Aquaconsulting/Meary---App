@@ -550,7 +550,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
         ],
       ),
       bottomNavigationBar: Container(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: const EdgeInsets.only(bottom: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -562,7 +562,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                           builder: (context) => CreateDetail(
                               tableID: widget.order['table_id'],
                               userID: userID!,
-                              orderID: widget.order['id'],
+                              order: widget.order,
                               orderStateID: defaultOrderState!,
                               products: products,
                               categories: categories,
@@ -601,7 +601,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                           builder: (context) => CreateDetail(
                               tableID: widget.order['table_id'],
                               userID: userID!,
-                              orderID: widget.order['id'],
+                              order: widget.order,
                               orderStateID: defaultOrderState!,
                               products: products,
                               categories: categories,
@@ -637,9 +637,9 @@ class _UpdateOrderState extends State<UpdateOrder> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ConfirmUpdate(
-                                order: widget.order,
+                          builder: (context) => ConfirmOrder(
                                 orderDetail: widget.orderDetail,
+                                order: widget.order,
                               )));
                 },
                 child: Container(

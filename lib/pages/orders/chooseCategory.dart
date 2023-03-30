@@ -16,13 +16,13 @@ class CreateDetail extends StatefulWidget {
       {super.key,
       required this.tableID,
       required this.userID,
-      required this.orderID,
+      required this.order,
       required this.orderStateID,
       required this.products,
       required this.categories,
       required this.coperti,
       required this.orderDetail});
-  int orderID;
+  dynamic order;
   int userID;
   int tableID;
   int coperti;
@@ -111,7 +111,7 @@ class _CreateDetailState extends State<CreateDetail> {
                       showDialog(
                           context: context,
                           builder: (context) => CustomModal(
-                                orderID: widget.orderID,
+                                orderID: widget.order['id'],
                               ));
                     },
                     child: const Text('CAMBIA TAVOLO')),
@@ -170,7 +170,7 @@ class _CreateDetailState extends State<CreateDetail> {
                                               widget.categories[index]['id'])
                                           .toList(),
                                       category: widget.categories[index],
-                                      orderID: widget.orderID,
+                                      order: widget.order,
                                       tableID: widget.tableID,
                                       userName: userName)));
                         },

@@ -172,7 +172,6 @@ class _OrderListState extends State<OrderList> {
                                                                             'id'])
                                                                     .then(
                                                                         (result) {
-                                                                  print(result);
                                                                   if (result) {
                                                                     Navigator.push(
                                                                         context,
@@ -264,7 +263,8 @@ class _OrderListState extends State<OrderList> {
                               Row(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(left: 10, right: 5),
+                                    margin: const EdgeInsets.only(
+                                        left: 10, right: 5),
                                     child: Text('€',
                                         style: TextStyle(
                                             color: HexColor('#43ABFB'),

@@ -7,8 +7,9 @@ import 'package:meari/constant.dart';
 import 'package:meari/pages/home.dart';
 
 class ConfirmOrder extends StatefulWidget {
-  ConfirmOrder({super.key, required this.orderDetail});
+  ConfirmOrder({super.key, required this.orderDetail, required this.order});
   List orderDetail;
+  dynamic order;
   @override
   State<ConfirmOrder> createState() => _ConfirmOrderState();
 }
@@ -28,15 +29,13 @@ class HexColor extends Color {
 class _ConfirmOrderState extends State<ConfirmOrder> {
   double totalPrice = 0;
   getTotalPrice() {
-    // double orderPrice = 0;
-    // for (var element in orderDetails) {
-    //   if (element['order_id'] == orders[index]['id']) {
-    //     dynamic counter = double.parse(element['price']) * element['quantity'];
-    //     orderPrice = counter + orderPrice;
-    //   }
-    // }
-    // return orderPrice;
-    return 2;
+    double orderPrice = 0;
+    for (var element in widget.orderDetail) {
+      dynamic counter =
+          double.parse(element['price'].toString()) * element['quantity'];
+      orderPrice = counter + orderPrice;
+    }
+    return orderPrice;
   }
 
   getProductName(x) {
@@ -45,6 +44,37 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
         return element['name'];
       }
     }
+  }
+
+  updateOrderDetail() {
+    try {
+      Services.updateOrderDetail(widget.orderDetail).then((result) {
+        if (result != false) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Home(userID: userID!)));
+
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Dettaglio ordine modificato con successo'),
+          ));
+        } else {
+          // SE INVECE RITORNA FALSE MOSTRA QUESTO
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('Qualcosa è andato storto.'),
+                    content:
+                        const Text('Controlla la tua connessione e riprova.'),
+                    actions: [
+                      TextButton(
+                          onPressed: (() {
+                            Navigator.pop(context);
+                          }),
+                          child: const Text('Chiudi'))
+                    ],
+                  ));
+        }
+      });
+    } catch (e) {}
   }
 
   addOrderDetail() {
@@ -74,6 +104,37 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
         }
       });
     } catch (e) {}
+  }
+
+  TextEditingController noteController = TextEditingController();
+  updateNote() {
+    try {
+      Services.updateNote(widget.order['id'], widget.order['note'])
+          .then((result) {
+        if (result) {
+          setState(() {
+            Navigator.pop(context);
+          });
+        } else {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('Qualcosa è andato storto.'),
+                    content:
+                        const Text('Controlla la tua connessione e riprova.'),
+                    actions: [
+                      TextButton(
+                          onPressed: (() {
+                            Navigator.pop(context);
+                          }),
+                          child: const Text('Chiudi'))
+                    ],
+                  ));
+        }
+      });
+    } catch (e) {
+      return e;
+    }
   }
 
   @override
@@ -110,16 +171,16 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text('COMANDA',
+                    children: [
+                      const Text('COMANDA',
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w300,
                               fontSize: 28)),
-                      Text(' '),
+                      const Text(' '),
                       Text(
-                        'ID-1',
-                        style: TextStyle(
+                        'ID-${widget.order['id']}',
+                        style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w800,
                             fontSize: 28),
@@ -341,13 +402,74 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                           )),
                     ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 10),
+                      margin: const EdgeInsets.only(bottom: 10),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 18, vertical: 15),
                               backgroundColor: HexColor('#CDD4D9')),
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title:
+                                          const Text('INSERISCI NOTE COMANDA.'),
+                                      content: TextFormField(
+                                        initialValue: widget.order['note'],
+                                        onChanged: (value) {
+                                          widget.order['note'] = value;
+                                        },
+                                        maxLines: 10,
+                                      ),
+                                      actions: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            TextButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 10),
+                                                    backgroundColor:
+                                                        HexColor('#CDD4D9')),
+                                                onPressed: () {
+                                                  updateNote();
+                                                },
+                                                icon: Image.asset(
+                                                  'assets/images/pen3.png',
+                                                ),
+                                                label: const Text(
+                                                  'CONFERMA',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                )),
+                                            TextButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 10),
+                                                    backgroundColor:
+                                                        HexColor('#43ABFB')),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                icon: const Icon(
+                                                  Icons.arrow_back_sharp,
+                                                  color: Colors.white,
+                                                ),
+                                                label: const Text(
+                                                  'CANCELLA',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ))
+                                          ],
+                                        )
+                                      ],
+                                    ));
+                          },
                           child: Row(
                             children: [
                               Container(
@@ -380,7 +502,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             children: [
                               Container(
                                 width: 100,
-                                child: Text(
+                                child: const Text(
                                   'ELIMINA COMANDA',
                                   style: TextStyle(fontWeight: FontWeight.w400),
                                 ),
@@ -399,7 +521,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                   horizontal: 18, vertical: 15),
                               backgroundColor: HexColor('#4BC59E')),
                           onPressed: () {
-                            addOrderDetail();
+                            confirmUpdate
+                                ? updateOrderDetail()
+                                : addOrderDetail();
                           },
                           child: Row(
                             children: [
