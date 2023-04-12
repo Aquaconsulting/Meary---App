@@ -7,7 +7,6 @@ import 'package:meari/constant.dart';
 import 'package:meari/pages/home.dart';
 import 'package:meari/pages/orders/chooseCategory.dart';
 import 'package:meari/pages/orders/confirmOrder.dart';
-import 'package:meari/pages/orders/confirmUpdate.dart';
 
 class UpdateOrder extends StatefulWidget {
   UpdateOrder({
@@ -634,10 +633,18 @@ class _UpdateOrderState extends State<UpdateOrder> {
               ),
               InkWell(
                 onTap: () {
+                  // PRENDI I COPERTI DI QUESTO ORDINE
+                  dynamic copertiObject = widget.orderDetail
+                      .where((element) => element['product_id'] == 1)
+                      .toList();
+
+                  int coperti = copertiObject[0]['quantity'];
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ConfirmOrder(
+                                coperti: coperti,
                                 orderDetail: widget.orderDetail,
                                 order: widget.order,
                               )));

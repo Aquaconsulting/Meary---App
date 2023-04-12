@@ -8,6 +8,7 @@ import 'package:meari/api/data.dart';
 import 'package:meari/components/customAppBar.dart';
 import 'package:meari/components/customModal.dart';
 import 'package:meari/constant.dart';
+import 'package:meari/pages/orders/createCocktail.dart';
 import 'package:meari/pages/orders/filterProducts.dart';
 import 'package:meari/pages/home.dart';
 
@@ -58,7 +59,7 @@ class _CreateDetailState extends State<CreateDetail> {
         body: SingleChildScrollView(
           child: Column(children: [
             Container(
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -81,7 +82,7 @@ class _CreateDetailState extends State<CreateDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Column(
-                  children: [
+                  children: const [
                     Text('COMANDA'),
                     Text(
                       'TAVOLO',
@@ -91,7 +92,8 @@ class _CreateDetailState extends State<CreateDetail> {
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(2),
@@ -193,6 +195,36 @@ class _CreateDetailState extends State<CreateDetail> {
                           ),
                         ),
                       )),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateCocktail(
+                              orderDetail: widget.orderDetail,
+                              coperti: widget.coperti,
+                              order: widget.order,
+                              tableID: widget.tableID,
+                            )));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                height: 170,
+                width: MediaQuery.of(context).size.width / 2 - 30,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: HexColor('#CDD4D9'),
+                      borderRadius: BorderRadius.circular(6)),
+                  child: const Center(
+                    child: Text('Crea Cocktail'),
+                  ),
+                ),
+              ),
             )
           ]),
         ));

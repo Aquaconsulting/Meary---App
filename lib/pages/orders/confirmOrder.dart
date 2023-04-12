@@ -7,9 +7,14 @@ import 'package:meari/constant.dart';
 import 'package:meari/pages/home.dart';
 
 class ConfirmOrder extends StatefulWidget {
-  ConfirmOrder({super.key, required this.orderDetail, required this.order});
+  ConfirmOrder(
+      {super.key,
+      required this.orderDetail,
+      required this.order,
+      required this.coperti});
   List orderDetail;
   dynamic order;
+  int coperti;
   @override
   State<ConfirmOrder> createState() => _ConfirmOrderState();
 }
@@ -521,9 +526,21 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                   horizontal: 18, vertical: 15),
                               backgroundColor: HexColor('#4BC59E')),
                           onPressed: () {
-                            confirmUpdate
-                                ? updateOrderDetail()
-                                : addOrderDetail();
+                            //SE LA ROTTA E' UPDATE NON AGGIUNGERE DI NUOVO I COPERTI
+                            if (confirmUpdate) {
+                              updateOrderDetail();
+                            } else {
+                              //ALTRIMENTI AGGIUNGI IL COPERTO PRIMA DI INVIARE LA COMANDA
+                              dynamic coperto = {
+                                'order_id': widget.order['id'],
+                                'order_state_id': defaultOrderState!,
+                                'price': products[0]['price'],
+                                'quantity': widget.coperti,
+                                'product_id': 1
+                              };
+                              widget.orderDetail.add(coperto);
+                              addOrderDetail();
+                            }
                           },
                           child: Row(
                             children: [
