@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meari/pages/login.dart';
 
 class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {
@@ -47,11 +48,17 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               'assets/images/logo.png',
               scale: 2,
             ),
-            Container(
-              margin: const EdgeInsets.only(right: 20),
-              child: Image.asset(
-                'assets/images/appbarSquare.png',
-                scale: 1.1,
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()));
+              },
+              child: Container(
+                margin: const EdgeInsets.only(right: 20),
+                child: Image.asset(
+                  'assets/images/appbarSquare.png',
+                  scale: 1.1,
+                ),
               ),
             ),
             // Container(

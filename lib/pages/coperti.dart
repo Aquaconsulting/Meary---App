@@ -28,7 +28,7 @@ class AddPlace extends StatefulWidget {
 
 class _AddPlaceState extends State<AddPlace> {
   int counter = 0;
-  int coperti = 0;
+  int coperti = 1;
 
   @override
   Widget build(BuildContext context) {

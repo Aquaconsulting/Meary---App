@@ -401,7 +401,8 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                       onPressed: () {
                                                         //SE L'UTENTE CLICCA CANCELLA LE NOTE SARANNO VUOTE
                                                         widget.orderDetail[
-                                                            index]['note'] = '';
+                                                                index]['note'] =
+                                                            'nessuna nota inserita';
                                                         Navigator.pop(context);
                                                       },
                                                       icon: const Icon(
@@ -522,6 +523,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ConfirmOrder(
+                              coperti: widget.coperti,
                               order: widget.order,
                               orderDetail: widget.orderDetail,
                             )));

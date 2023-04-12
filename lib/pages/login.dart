@@ -79,11 +79,11 @@ class _LoginPageState extends State<LoginPage> {
           loading = false;
         });
       }
-    } on NoSuchMethodError catch (_) {
-      errorMessage = 'Qualcosa è andato storto';
+    } on NoSuchMethodError catch (e) {
+      errorMessage = e.toString();
       loading = false;
     } on FlutterError catch (e) {
-      errorMessage = 'Qualcosa è andato storto';
+      errorMessage = e.toString();
       loading = false;
     } on FormatException catch (_) {
       errorMessage = '';

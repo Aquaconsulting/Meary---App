@@ -221,14 +221,14 @@ class _ShowCategoryState extends State<ShowCategory> {
                                     style:
                                         TextStyle(fontWeight: FontWeight.w700)),
                                 Text(
-                                  'Breve descrizione',
+                                  widget.filteredProducts[index]['description'],
                                   style: TextStyle(
                                       fontSize: 12, color: HexColor('#A1C2C5')),
                                 )
                               ],
                             ),
                             subtitle: Container(
-                              margin: EdgeInsets.only(top: 30),
+                              margin: const EdgeInsets.only(top: 30),
                               child: Text(
                                 '€${widget.filteredProducts[index]['price']}',
                                 style: TextStyle(
