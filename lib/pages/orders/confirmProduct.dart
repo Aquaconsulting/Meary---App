@@ -359,7 +359,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                         ['custom_product'] !=
                                     null
                                 ? 350
-                                : 320,
+                                : 340,
                             child: Column(
                               children: [
                                 widget.orderDetail[index]['custom_product'] !=

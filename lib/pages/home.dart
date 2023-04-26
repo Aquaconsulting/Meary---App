@@ -245,18 +245,6 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     )),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: HexColor('#727270')),
-              onPressed: () {
-                logout();
-              },
-              child: const Text('Logout')),
-        ],
-      ),
     );
   }
 }

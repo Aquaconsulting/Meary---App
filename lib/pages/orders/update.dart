@@ -367,7 +367,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                                               ['custom_product'] !=
                                           null
                                       ? 350
-                                      : 320,
+                                      : 340,
                                   child: Column(
                                     children: [
                                       widget.orderDetail[index]
