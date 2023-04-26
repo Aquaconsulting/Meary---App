@@ -18,9 +18,7 @@ class _CustomModalState extends State<CustomModal> {
     try {
       Services.changeTable(widget.orderID, value!).then((result) {
         if (result) {
-          setState(() {
-            Navigator.pop(context);
-          });
+          Navigator.pop(context, 'refresh');
         } else {
           showDialog(
               context: context,
@@ -31,7 +29,7 @@ class _CustomModalState extends State<CustomModal> {
                     actions: [
                       TextButton(
                           onPressed: (() {
-                            Navigator.pop(context);
+                            Navigator.pop(context, '');
                           }),
                           child: const Text('Chiudi'))
                     ],
@@ -56,45 +54,48 @@ class _CustomModalState extends State<CustomModal> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: EdgeInsets.zero,
       title: const Text('Cambia Tavolo'),
       content: SingleChildScrollView(
-          child: Wrap(
-        children: List.generate(
-            tables.length,
-            (index) => InkWell(
-                  onTap: () {
-                    value = tables[index]['id'];
-                    // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
-                    if (getTableColour(index) == null ||
-                        getTableColour(index) == '#4BC59E') {
-                      changeTable();
-                    }
-                    setState(() {});
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: HexColor(getTableColour(index) != null
-                            ? getTableColour(index)
-                            : '#4BC59E'),
-                        borderRadius: BorderRadius.circular(8)),
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                    height: 110,
-                    width: 110,
-                    child: Center(
-                      child: Text(
-                        tables[index]['id'].toString(),
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 30),
-                      ),
-                    ),
+        child: Wrap(
+            children: List.generate(
+          tables.length,
+          (index) => Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            width: MediaQuery.of(context).size.width / 2 - 60,
+            child: InkWell(
+              onTap: () {
+                value = tables[index]['id'];
+                // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
+                if (getTableColour(index) == null ||
+                    getTableColour(index) == '#4BC59E') {
+                  changeTable();
+                  setState(() {
+                    currentTable = tables[index]['name'];
+                  });
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: HexColor(getTableColour(index) ?? '#4BC59E'),
+                    borderRadius: BorderRadius.circular(8)),
+                height: 110,
+                child: Center(
+                  child: Text(
+                    tables[index]['name'],
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 30),
                   ),
-                )),
-      )),
+                ),
+              ),
+            ),
+          ),
+        )),
+      ),
       actions: [
         TextButton(
             onPressed: (() {
-              Navigator.pop(context);
+              Navigator.pop(context, '');
             }),
             child: Center(
               child: Text(

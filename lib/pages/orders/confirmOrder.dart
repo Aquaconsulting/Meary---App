@@ -5,6 +5,7 @@ import 'package:meari/api/apiServices.dart';
 import 'package:meari/components/customAppBar.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/home.dart';
+import 'package:meari/pages/orders/filterProducts.dart';
 
 class ConfirmOrder extends StatefulWidget {
   ConfirmOrder(
@@ -43,10 +44,26 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
     return orderPrice;
   }
 
+  getProductsMinutes(x) {
+    for (var element in products) {
+      if (element['id'] == x['product_id']) {
+        return element['tempo_preparazione'];
+      }
+    }
+  }
+
   getProductName(x) {
     for (var element in products) {
       if (element['id'] == x['product_id']) {
         return element['name'];
+      }
+    }
+  }
+
+  getProductImage(orderDetail) {
+    for (var element in products) {
+      if (element['id'] == orderDetail['product_id']) {
+        return element['image'];
       }
     }
   }
@@ -150,8 +167,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
       body: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: 40, left: 20, right: 20),
-            height: 550,
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
+            height: 520,
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -216,18 +234,18 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    getTotalPrice().toString(),
+                                    getTotalPrice().toStringAsFixed(2),
                                     style: TextStyle(
                                         color: HexColor('#43ABFB'),
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 12),
+                                        fontSize: 15),
                                   ),
                                   Text(
                                     'Totale',
                                     style: TextStyle(
                                         color: HexColor('#43ABFB'),
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 9),
+                                        fontSize: 12),
                                   )
                                 ],
                               ),
@@ -235,80 +253,51 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                           ],
                         ),
                       ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Image.asset('assets/images/clock.png'),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 2),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '11:00',
-                                  style: TextStyle(
-                                      color: HexColor('#43ABFB'),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12),
-                                ),
-                                Text(
-                                  'Minuti',
-                                  style: TextStyle(
-                                      color: HexColor('#43ABFB'),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 9),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 10),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                  left: BorderSide(
-                                      width: 1, color: Colors.black)),
-                            ),
-                          ),
-                          Image.asset('assets/images/redclock.png'),
-                          Container(
-                            margin: const EdgeInsets.only(left: 4, right: 12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '20:00',
-                                  style: TextStyle(
-                                      color: HexColor('##FF3131'),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12),
-                                ),
-                                Text(
-                                  'Tot attesa',
-                                  style: TextStyle(
-                                      color: HexColor('##FF3131'),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 9),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
+                      // Row(
+                      //   children: [
+                      //     Container(
+                      //       margin: const EdgeInsets.symmetric(
+                      //           vertical: 12, horizontal: 10),
+                      //     ),
+                      //     Image.asset('assets/images/redclock.png'),
+                      //     Container(
+                      //       margin: const EdgeInsets.only(left: 4, right: 12),
+                      //       child: Column(
+                      //         crossAxisAlignment: CrossAxisAlignment.end,
+                      //         mainAxisAlignment: MainAxisAlignment.center,
+                      //         children: [
+                      //           Text(
+                      //             '20:20',
+                      //             style: TextStyle(
+                      //                 color: HexColor('##FF3131'),
+                      //                 fontWeight: FontWeight.w600,
+                      //                 fontSize: 12),
+                      //           ),
+                      //           Text(
+                      //             'Tot attesa',
+                      //             style: TextStyle(
+                      //                 color: HexColor('##FF3131'),
+                      //                 fontWeight: FontWeight.w400,
+                      //                 fontSize: 9),
+                      //           )
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ],
+                      // )
                     ],
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
                   width: MediaQuery.of(context).size.width,
                   height: 80,
                   color: HexColor('#F4F3F3'),
                   child: Center(
                     child: Text(
-                      'Tutti i prodotti sono stati aggiunti correttamente alla comanda.',
+                      widget.orderDetail.isEmpty
+                          ? 'Nessun prodotto aggiunto, impossibile inviare la comanda'
+                          : 'Tutti i prodotti sono stati aggiunti correttamente alla comanda.',
                       style: TextStyle(
                           fontSize: 20,
                           color: HexColor('#002115'),
@@ -326,22 +315,39 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                         scrollDirection: Axis.vertical,
                         itemCount: widget.orderDetail.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            child: Card(
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 5),
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
                               child: ListTile(
                                 contentPadding:
                                     const EdgeInsets.symmetric(vertical: 12),
-                                leading: Image.asset(
-                                  'assets/images/logo.png',
-                                  scale: 2.5,
-                                ),
+                                leading: getProductImage(
+                                            widget.orderDetail[index]) ==
+                                        null
+                                    ? Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/logo.png',
+                                            scale: 3.4,
+                                          )
+                                        ],
+                                      )
+                                    : Image.network(
+                                        'https://meari.aquaconsulting.it/img/product/${getProductImage(widget.orderDetail[index])}',
+                                      ),
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                         getProductName(
-                                            widget.orderDetail[index]),
-                                        style: TextStyle(
+                                                widget.orderDetail[index])
+                                            .toString(),
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w700)),
                                     Text(
                                       'Quantità ${widget.orderDetail[index]['quantity']}',
@@ -353,7 +359,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                   ],
                                 ),
                                 subtitle: Container(
-                                  margin: EdgeInsets.only(top: 30),
+                                  margin: const EdgeInsets.only(top: 30),
                                   child: Text(
                                     '€${widget.orderDetail[index]['price']}',
                                     style: TextStyle(
@@ -361,7 +367,20 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ),
-                                trailing: Text('da aggiungere'),
+                                trailing: Column(
+                                  children: [
+                                    Image.asset('assets/images/clock.png'),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      '${getProductsMinutes(widget.orderDetail[index]) ?? '0'} min.',
+                                      style: TextStyle(
+                                          color: HexColor('#43ABFB'),
+                                          fontWeight: FontWeight.w700),
+                                    )
+                                  ],
+                                ),
                                 tileColor: Colors.white,
                               ),
                             ),
@@ -372,195 +391,292 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
               ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 15),
-                              backgroundColor: HexColor('#43ABFB')),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 100,
-                                child: const Text(
-                                  'MODIFICA COMANDA',
-                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/images/pen2.png',
-                                scale: 1.2,
-                              )
-                            ],
-                          )),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 15),
-                              backgroundColor: HexColor('#CDD4D9')),
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title:
-                                          const Text('INSERISCI NOTE COMANDA.'),
-                                      content: TextFormField(
-                                        initialValue: widget.order['note'],
-                                        onChanged: (value) {
-                                          widget.order['note'] = value;
-                                        },
-                                        maxLines: 10,
-                                      ),
-                                      actions: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            TextButton.icon(
-                                                style: ElevatedButton.styleFrom(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 20,
-                                                        vertical: 10),
-                                                    backgroundColor:
-                                                        HexColor('#CDD4D9')),
-                                                onPressed: () {
-                                                  updateNote();
-                                                },
-                                                icon: Image.asset(
-                                                  'assets/images/pen3.png',
-                                                ),
-                                                label: const Text(
-                                                  'CONFERMA',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                )),
-                                            TextButton.icon(
-                                                style: ElevatedButton.styleFrom(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 10),
-                                                    backgroundColor:
-                                                        HexColor('#43ABFB')),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                icon: const Icon(
-                                                  Icons.arrow_back_sharp,
-                                                  color: Colors.white,
-                                                ),
-                                                label: const Text(
-                                                  'CANCELLA',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ))
-                                          ],
-                                        )
-                                      ],
-                                    ));
-                          },
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 100,
-                                child: const Text(
-                                  'NOTE COMANDA',
-                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/images/pen3.png',
-                                scale: 1,
-                              )
-                            ],
-                          )),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 15),
-                              backgroundColor: HexColor('#FF3131')),
-                          onPressed: () {},
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 100,
-                                child: const Text(
-                                  'ELIMINA COMANDA',
-                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/images/cestino.png',
-                                scale: 0.8,
-                              )
-                            ],
-                          )),
-                    ),
-                    SizedBox(
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 15),
-                              backgroundColor: HexColor('#4BC59E')),
-                          onPressed: () {
+          const SizedBox(
+            height: 15,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(children: [
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 20, right: 20, top: 16),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 18, vertical: 20),
+                            backgroundColor: HexColor('#4BC59E')),
+                        onPressed: () {
+                          if (widget.orderDetail.isNotEmpty) {
                             //SE LA ROTTA E' UPDATE NON AGGIUNGERE DI NUOVO I COPERTI
                             if (confirmUpdate) {
                               updateOrderDetail();
                             } else {
-                              //ALTRIMENTI AGGIUNGI IL COPERTO PRIMA DI INVIARE LA COMANDA
-                              dynamic coperto = {
+                              dynamic readyState = product_states
+                                  .where((element) =>
+                                      element['state_colour'] == "#2F2DCF")
+                                  .toList();
+                              //CREA COPERTO CON STATO A PRONTO
+                              dynamic finalCoperto = {
                                 'order_id': widget.order['id'],
-                                'order_state_id': defaultOrderState!,
-                                'price': products[0]['price'],
+                                'order_state_id': readyState[0]['id'],
+                                'price': coperto[0]['price'],
                                 'quantity': widget.coperti,
-                                'product_id': 1
+                                'product_id': coperto[0]['id']
                               };
-                              widget.orderDetail.add(coperto);
+                              // AGGIUNGILO ALLA LISTA DI PRODOTTI
+
+                              widget.orderDetail.add(finalCoperto);
                               addOrderDetail();
                             }
-                          },
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 100,
-                                child: const Text(
-                                  'INVIA COMANDA',
-                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/images/arrow.png',
-                                scale: 1.2,
-                              )
-                            ],
-                          )),
-                    )
-                  ],
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'INVIA COMANDA',
+                              style: TextStyle(fontWeight: FontWeight.w400),
+                            ),
+                            Image.asset(
+                              'assets/images/arrow.png',
+                              scale: 1.2,
+                            )
+                          ],
+                        ))),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 16),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 20),
+                          backgroundColor: HexColor('#43ABFB')),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        setState(() {
+                          idCustomCocktail = [];
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'MODIFICA COMANDA',
+                            style: TextStyle(fontWeight: FontWeight.w400),
+                          ),
+                          Image.asset(
+                            'assets/images/pen2.png',
+                            scale: 1.2,
+                          )
+                        ],
+                      )),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 16),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 20),
+                          backgroundColor: HexColor('#FF3131')),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: const Text(
+                                      'Sei sicuro di voler eliminare questo ordine?'),
+                                  content: const Text(
+                                      'Questa azione è irreversibile.'),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 10),
+                                                backgroundColor:
+                                                    HexColor('#FF3131')),
+                                            onPressed: () {
+                                              try {
+                                                Services.deleteOrder(
+                                                        widget.order['id'])
+                                                    .then((result) {
+                                                  if (result) {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Home(
+                                                                    userID:
+                                                                        userID!)));
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                            const SnackBar(
+                                                      content: Text(
+                                                          'Ordine eliminato'),
+                                                    ));
+                                                  } else {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            AlertDialog(
+                                                              title: const Text(
+                                                                  'Qualcosa è andato storto.'),
+                                                              content: const Text(
+                                                                  'Controlla la tua connessione e riprova.'),
+                                                              actions: [
+                                                                TextButton(
+                                                                    onPressed:
+                                                                        (() {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    }),
+                                                                    child: const Text(
+                                                                        'Chiudi'))
+                                                              ],
+                                                            ));
+                                                  }
+                                                });
+                                              } catch (e) {}
+                                            },
+                                            icon: Image.asset(
+                                                'assets/images/cestino.png'),
+                                            label: const Text(
+                                              'ELIMINA',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )),
+                                        TextButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 10),
+                                                backgroundColor:
+                                                    HexColor('#43ABFB')),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            icon: const Icon(
+                                              Icons.arrow_back_sharp,
+                                              color: Colors.white,
+                                            ),
+                                            label: const Text(
+                                              'INDIETRO',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ))
+                                      ],
+                                    )
+                                  ],
+                                ));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'ELIMINA COMANDA',
+                            style: TextStyle(fontWeight: FontWeight.w400),
+                          ),
+                          Image.asset(
+                            'assets/images/cestino.png',
+                            scale: 0.8,
+                          )
+                        ],
+                      )),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 16),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 20),
+                          backgroundColor: HexColor('#CDD4D9')),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: const Text('INSERISCI NOTE COMANDA.'),
+                                  content: TextFormField(
+                                    initialValue: widget.order['note'],
+                                    onChanged: (value) {
+                                      widget.order['note'] = value;
+                                    },
+                                    maxLines: 10,
+                                  ),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 10),
+                                                backgroundColor:
+                                                    HexColor('#CDD4D9')),
+                                            onPressed: () {
+                                              updateNote();
+                                            },
+                                            icon: Image.asset(
+                                              'assets/images/pen3.png',
+                                            ),
+                                            label: const Text(
+                                              'CONFERMA',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )),
+                                        TextButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 10),
+                                                backgroundColor:
+                                                    HexColor('#43ABFB')),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            icon: const Icon(
+                                              Icons.arrow_back_sharp,
+                                              color: Colors.white,
+                                            ),
+                                            label: const Text(
+                                              'CANCELLA',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ))
+                                      ],
+                                    )
+                                  ],
+                                ));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'NOTE COMANDA',
+                            style: TextStyle(fontWeight: FontWeight.w400),
+                          ),
+                          Image.asset(
+                            'assets/images/pen3.png',
+                            scale: 1.2,
+                          )
+                        ],
+                      )),
+                ),
+                const SizedBox(
+                  height: 20,
                 )
-              ],
+              ]),
             ),
           )
         ],

@@ -11,7 +11,7 @@ class Services {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/api/orders/'),
+        Uri.parse('https://meari.aquaconsulting.it/api/orders/'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
@@ -37,7 +37,7 @@ class Services {
     String token = await API().getToken();
     try {
       final response = await http.patch(
-        Uri.parse('http://10.0.2.2:8000/api/orders/$id'),
+        Uri.parse('https://meari.aquaconsulting.it/api/orders/$id'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
@@ -62,7 +62,7 @@ class Services {
     String token = await API().getToken();
     try {
       final response = await http.delete(
-        Uri.parse('http://10.0.2.2:8000/api/orders/$orderID'),
+        Uri.parse('https://meari.aquaconsulting.it/api/orders/$orderID'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
@@ -80,7 +80,7 @@ class Services {
 
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:8000/api/changeTable'),
+        Uri.parse('https://meari.aquaconsulting.it/api/changeTable'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
@@ -99,7 +99,7 @@ class Services {
 
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:8000/api/updateNote'),
+        Uri.parse('https://meari.aquaconsulting.it/api/updateNote'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
@@ -117,28 +117,31 @@ class Services {
     String token = await API().getToken();
 
     List<Map<String, dynamic>>? finalDetail = [];
+
     finalDetail = [
       for (int i = 0; i < details.length; i++)
         {
           "order_id": "${details[i]['order_id']}",
           "product_id": "${details[i]['product_id']}",
           "note": details[i]['note'] == null
-              ? 'Nessuna nota inserita'
+              ? 'nessuna nota'
               : "${details[i]['note']}",
           "quantity": "${details[i]['quantity']}",
           "price": "${details[i]['price']}",
-          "order_state_id": "${details[i]['order_state_id']}"
+          "order_state_id": details[i]['order_state_id'],
+          "custom_product": "${details[i]['custom_product']}"
         }
     ];
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/api/order_details/'),
+        Uri.parse('https://meari.aquaconsulting.it/api/order_details/'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
         },
         body: jsonEncode(<String, dynamic>{"orderData": finalDetail}),
       );
+
       json.decode(response.body);
       return true;
     } catch (e) {
@@ -157,16 +160,18 @@ class Services {
           "order_id": "${details[i]['order_id']}",
           "product_id": "${details[i]['product_id']}",
           "note": details[i]['note'] == null
-              ? 'Nessuna nota inserita'
+              ? "nessuna nota"
               : "${details[i]['note']}",
           "quantity": "${details[i]['quantity']}",
           "price": "${details[i]['price']}",
-          "order_state_id": "${details[i]['order_state_id']}"
+          "order_state_id": details[i]['order_state_id'],
+          "custom_product": "${details[i]['custom_product']}"
         }
     ];
+
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:8000/api/order_details/0'),
+        Uri.parse('https://meari.aquaconsulting.it/api/order_details/0'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
@@ -185,12 +190,60 @@ class Services {
     String token = await API().getToken();
     try {
       final response = await http.delete(
-        Uri.parse('http://10.0.2.2:8000/api/order_details/$id'),
+        Uri.parse('https://meari.aquaconsulting.it/api/order_details/$id'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token"
         },
       );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // CREATE CUSTOM COCKTAIL
+  static Future<dynamic> createCustomCocktail(request) async {
+    String token = await API().getToken();
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://meari.aquaconsulting.it/api/createCustomCocktail'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': request['name'],
+          'price': request['price'],
+          'description': request['desription'],
+          'destination_id': request['destination_id'],
+          'state': request['state'],
+          'tempo_preparazione': request['tempo_preparazione'],
+        }),
+      );
+
+      final Map<String, dynamic> parsed = json.decode(response.body);
+      return parsed;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // CHANGE STATE
+  static Future<dynamic> changeState(int orderID) async {
+    String token = await API().getToken();
+
+    try {
+      final response = await http.put(
+        Uri.parse('https://meari.aquaconsulting.it/api/changeState/$orderID'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: jsonEncode(<String, dynamic>{"id": orderID}),
+      );
+
       return true;
     } catch (e) {
       return false;
