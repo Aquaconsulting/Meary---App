@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:meari/api/api.dart';
 import 'package:meari/api/data.dart';
 import 'package:meari/components/customAppBar.dart';
+import 'package:meari/constant.dart';
 import 'package:meari/main.dart';
 import 'package:meari/pages/home.dart';
 import 'dart:convert';
@@ -70,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 builder: (context) => Home(
                       userID: response['user'][0]['id'],
                     )));
+        userName = response['user'][0]['first_name'];
       } else {
         errorMessage = 'Email o password errati.';
         loading = false;
@@ -99,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: HexColor('#F4F3F3'),
-        appBar: CustomAppBar(),
+        // appBar: CustomAppBar(),
         body: SingleChildScrollView(
           child: Container(
             margin: const EdgeInsets.all(20),

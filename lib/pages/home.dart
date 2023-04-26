@@ -37,7 +37,6 @@ class HexColor extends Color {
 
 class _HomeState extends State<Home> {
   SharedPreferences? preferences;
-  bool loading = true;
   getUserData() async {
     setState(() {
       loading = true;
@@ -58,15 +57,19 @@ class _HomeState extends State<Home> {
     SharedPreferences pre = await SharedPreferences.getInstance();
     userName = pre.getString('name')!;
     String token = await API().getToken();
-    var url = 'http://10.0.2.2:8000/api/apiData';
+    var url = 'https://meari.aquaconsulting.it/api/apiData';
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
     });
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 1500));
     loading = false;
-    final Map<String, dynamic> parsed = json.decode(response.body);
-    return parsed;
+    try {
+      final dynamic parsed = json.decode(utf8.decode(response.bodyBytes));
+      return parsed;
+    } catch (e) {
+      return {'e': e};
+    }
   }
 
   //funzione async per caricamento dati con try catch
@@ -76,13 +79,16 @@ class _HomeState extends State<Home> {
     });
     //try catch per la chiamata http
     try {
-      homePageData = await fetchData();
-      orders = homePageData['orders'];
-      tables = homePageData['tables'];
-      products = homePageData['products'];
-      categories = homePageData['categories'];
-      orderDetails = homePageData['order_details'];
-      defaultOrderState = homePageData['default'][0];
+      apiData = await fetchData();
+      orders = apiData['orders'];
+      tables = apiData['tables'];
+      products = apiData['products'];
+      destinations = apiData['destinazioni'];
+      product_states = apiData['order_state_product'];
+      categories = apiData['categories'];
+      orderDetails = apiData['order_details'];
+      defaultOrderState = apiData['default'][0];
+      coperto = apiData['coperti'];
     } on TimeoutException catch (_) {
       apiHasError = true;
       errorMessage = 'Tempo scaduto, riprovare';
@@ -108,13 +114,19 @@ class _HomeState extends State<Home> {
     getUserData();
     loadData();
     userID = widget.userID;
+    idCustomCocktail = [];
+    seeLogout = true;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: HexColor('#F4F3F3'),
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        action: () {
+          logout();
+        },
+      ),
       body: loading
           ? Center(
               child: CircularProgressIndicator(
@@ -135,7 +147,7 @@ class _HomeState extends State<Home> {
                               onPressed: () {
                                 logout();
                               },
-                              child: Text('LOGOUT'))
+                              child: const Text('LOGOUT'))
                         ],
                       ),
                     )
@@ -156,10 +168,9 @@ class _HomeState extends State<Home> {
                                     MaterialPageRoute(
                                         builder: (context) => CreateOrderPage(
                                             userID: widget.userID,
-                                            tables: homePageData['tables'],
-                                            products: products,
-                                            categories: categories,
                                             userName: userName)));
+                                //IL TASTO LOGOUT E' DISPONIBILE SOLO ALLA PAGINA HOME
+                                seeLogout = false;
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -193,12 +204,21 @@ class _HomeState extends State<Home> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const OrderList()));
+                                        builder: (context) => OrderList(
+                                              order: orders
+                                                  //PASSA SOLO ORDINI APERTI
+                                                  .where((element) =>
+                                                      element['order_state']
+                                                          ['state_colour'] !=
+                                                      '#4BC59E')
+                                                  .toList(),
+                                            )));
+                                //IL TASTO LOGOUT E' DISPONIBILE SOLO ALLA PAGINA HOME
+                                seeLogout = false;
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    color: HexColor('##67CDFD'),
+                                    color: HexColor('#67CDFD'),
                                     borderRadius: BorderRadius.circular(10)),
                                 width: MediaQuery.of(context).size.width,
                                 height: 170,
@@ -225,6 +245,18 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     )),
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: HexColor('#727270')),
+              onPressed: () {
+                logout();
+              },
+              child: const Text('Logout')),
+        ],
+      ),
     );
   }
 }

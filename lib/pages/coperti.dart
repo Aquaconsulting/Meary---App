@@ -8,18 +8,16 @@ import 'package:meari/pages/orders/chooseCategory.dart';
 class AddPlace extends StatefulWidget {
   AddPlace(
       {super.key,
-      required this.tableID,
+      required this.table,
       required this.userName,
       required this.userID,
       required this.order,
-      required this.orderStateID,
       required this.products,
       required this.categories});
   String userName;
   dynamic order;
   int userID;
-  int tableID;
-  int orderStateID;
+  dynamic table;
   List<dynamic> products = [];
   List<dynamic> categories = [];
   @override
@@ -28,7 +26,13 @@ class AddPlace extends StatefulWidget {
 
 class _AddPlaceState extends State<AddPlace> {
   int counter = 0;
-  int coperti = 1;
+  int coperti = 0;
+  bool value = false;
+  void refreshData() {
+    setState(() {
+      value = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +78,15 @@ class _AddPlaceState extends State<AddPlace> {
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(2),
                           border:
                               Border.all(width: 1, color: HexColor('#FF3131'))),
                       child: Text(
-                        widget.tableID.toString(),
+                        currentTable.toString(),
                         style: TextStyle(
                             fontSize: 20,
                             color: HexColor('#FF3131'),
@@ -90,12 +96,14 @@ class _AddPlaceState extends State<AddPlace> {
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: HexColor('#43ABFB')),
-                        onPressed: () {
-                          showDialog(
+                        onPressed: () async {
+                          String refresh = await showDialog(
+                              barrierDismissible: false,
                               context: context,
                               builder: (context) => CustomModal(
                                     orderID: widget.order['id'],
                                   ));
+                          refresh == 'refresh' ? refreshData() : null;
                         },
                         child: const Text('CAMBIA TAVOLO'))
                   ],
@@ -135,7 +143,7 @@ class _AddPlaceState extends State<AddPlace> {
                   ),
                 ),
                 Text(
-                  'COPERTI TAVOLO ${widget.tableID.toString()}',
+                  'COPERTI TAVOLO $currentTable',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(
@@ -235,7 +243,6 @@ class _AddPlaceState extends State<AddPlace> {
                         builder: (context) => CreateDetail(
                               orderDetail: [],
                               coperti: coperti,
-                              tableID: widget.tableID,
                               userID: userID!,
                               order: widget.order,
                               orderStateID: 1,

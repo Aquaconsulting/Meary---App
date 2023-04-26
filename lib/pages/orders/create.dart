@@ -11,17 +11,12 @@ import 'package:meari/pages/orders/chooseCategory.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateOrderPage extends StatefulWidget {
-  CreateOrderPage(
-      {super.key,
-      required this.userName,
-      required this.userID,
-      required this.tables,
-      required this.products,
-      required this.categories});
+  CreateOrderPage({
+    super.key,
+    required this.userName,
+    required this.userID,
+  });
   int userID;
-  List tables = [];
-  List products = [];
-  List categories = [];
   String userName;
   @override
   State<CreateOrderPage> createState() => _CreateOrderPageState();
@@ -40,25 +35,16 @@ class HexColor extends Color {
 }
 
 class _CreateOrderPageState extends State<CreateOrderPage> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    tables = widget.tables;
-  }
-
   String errorMessage = '';
   final _formKey = GlobalKey<FormState>();
   Object currentItem = {};
   TextEditingController noteController = TextEditingController();
-  List tables = [];
   dynamic order;
   addOrder() {
     try {
       Services.addOrder(widget.userID, value!, 'nessuna nota', DateTime.now(),
               defaultOrderState!)
           .then((result) {
-        print(result);
         if (result != false) {
           //SE LA L'API RITORNA L'OGGETTO PRENDO ID DELL'ORDINE APPENA CREATO E LO PASSO ALLA PAGINA SUCCESSIVA
           order = result;
@@ -66,13 +52,13 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => AddPlace(
-                        tableID: value!,
+                        table: tables.where(
+                            (element) => element['id'] == order['table_id']),
                         userName: widget.userName,
                         userID: widget.userID,
                         order: order,
-                        orderStateID: 1,
-                        products: widget.products,
-                        categories: widget.categories,
+                        products: products,
+                        categories: categories,
                       )));
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Ordine creato con successo'),
@@ -101,13 +87,21 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   int? value;
 
   getTableColour(index) {
+    String color = '';
     for (var element in orders) {
-      if (element['table_id'] == tables[index]['id']) {
-        String color = element['order_state']['state_colour'];
-
+      if (element['table_id'] == tables[index]['id'] &&
+          element['order_state']['state_colour'] != '#4BC59E') {
+        color = element['order_state']['state_colour'];
         return color;
       }
     }
+
+    // for (var element in orders) {
+    //   if (element['table_id'] == tables[index]['id'] &&
+    //       element['order_state']['state_colour'] != '#4BC59E') {
+
+    //   }
+    // }
   }
 
   @override
@@ -130,7 +124,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   ]),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               width: MediaQuery.of(context).size.width,
               color: HexColor('#F4F3F3'),
               child: Column(
@@ -144,7 +138,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         decoration:
@@ -188,6 +182,14 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                           ],
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Container(
                         decoration:
                             BoxDecoration(border: Border.all(width: 0.4)),
@@ -209,6 +211,27 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                           ],
                         ),
                       ),
+                      Container(
+                        decoration:
+                            BoxDecoration(border: Border.all(width: 0.4)),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 18,
+                              height: 22,
+                              color: HexColor('#2F2DCF'),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 3),
+                              child: const Text(
+                                'CONSEGNATO',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
                     ],
                   )
                 ],
@@ -218,10 +241,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
               child: SingleChildScrollView(
                 child: Wrap(
                   children: List.generate(
-                      widget.tables.length,
+                      tables.length,
                       (index) => InkWell(
                             onTap: () {
-                              value = widget.tables[index]['id'];
+                              currentTable = tables[index]['name'];
+                              value = tables[index]['id'];
                               // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
                               if (getTableColour(index) == null ||
                                   getTableColour(index) == '#4BC59E') {
@@ -238,17 +262,16 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                       offset: const Offset(0, 3),
                                     )
                                   ],
-                                  color: HexColor(getTableColour(index) != null
-                                      ? getTableColour(index)
-                                      : '#4BC59E'),
+                                  color: HexColor(
+                                      getTableColour(index) ?? '#4BC59E'),
                                   borderRadius: BorderRadius.circular(8)),
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 10),
                               height: 110,
-                              width: 110,
+                              width: MediaQuery.of(context).size.width / 3 - 20,
                               child: Center(
                                 child: Text(
-                                  widget.tables[index]['id'].toString(),
+                                  tables[index]['name'],
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 30),
