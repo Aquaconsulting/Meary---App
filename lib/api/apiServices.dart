@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:meari/api/api.dart';
+import 'package:meari/constant.dart';
 
 class Services {
   // STORE ORDER
@@ -11,6 +12,7 @@ class Services {
 
     try {
       final response = await http.post(
+        //  per emulatore android http://10.0.2.2:8000
         Uri.parse('https://meari.aquaconsulting.it/api/orders/'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
@@ -143,6 +145,7 @@ class Services {
       );
 
       json.decode(response.body);
+      // updateWebSocket();
       return true;
     } catch (e) {
       return false;
@@ -178,7 +181,7 @@ class Services {
         },
         body: jsonEncode(<String, dynamic>{"orderData": finalDetail}),
       );
-
+      // updateWebSocket();
       return true;
     } catch (e) {
       return false;

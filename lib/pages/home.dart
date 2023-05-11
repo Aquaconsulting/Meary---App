@@ -15,6 +15,7 @@ import 'package:meari/pages/orders/index.dart';
 import 'package:meari/pages/orders/update.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class Home extends StatefulWidget {
   Home({super.key, required this.userID});
@@ -88,6 +89,7 @@ class _HomeState extends State<Home> {
       categories = apiData['categories'];
       orderDetails = apiData['order_details'];
       defaultOrderState = apiData['default'][0];
+      defaultProductState = apiData['order_state_product'][0]['id'];
       coperto = apiData['coperti'];
     } on TimeoutException catch (_) {
       apiHasError = true;
@@ -108,6 +110,13 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // _sendMessage() {
+  //   List z = ['true', 'false'];
+  //   for (var element in z) {
+  //     _channel.sink.add(element);
+  //   }
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -117,6 +126,10 @@ class _HomeState extends State<Home> {
     idCustomCocktail = [];
     seeLogout = true;
   }
+
+  // final _channel = WebSocketChannel.connect(
+  //   Uri.parse('wss://echo.websocket.events'),
+  // );
 
   @override
   Widget build(BuildContext context) {
@@ -143,11 +156,6 @@ class _HomeState extends State<Home> {
                             errorMessage,
                             style: const TextStyle(fontSize: 14),
                           ),
-                          ElevatedButton(
-                              onPressed: () {
-                                logout();
-                              },
-                              child: const Text('LOGOUT'))
                         ],
                       ),
                     )
@@ -241,6 +249,13 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             ),
+                            // StreamBuilder(
+                            //   stream: _channel.stream,
+                            //   builder: (context, snapshot) {
+                            //     return Text(
+                            //         snapshot.hasData ? '${snapshot.data}' : '');
+                            //   },
+                            // )
                           ],
                         ),
                       ),

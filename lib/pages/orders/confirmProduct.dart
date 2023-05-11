@@ -514,12 +514,23 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                 refreshData();
                                               }
                                             },
-                                      child: Text(
-                                        '${getProductName(widget.orderDetail[index])} '
-                                        '${getProductStateName(index) ?? ''}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 20),
+                                      child: Wrap(
+                                        children: [
+                                          Text(
+                                            '${getProductName(widget.orderDetail[index])} ',
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 20),
+                                          ),
+                                          Container(
+                                            width: 10,
+                                            height: 10,
+                                            child: CircleAvatar(
+                                              backgroundColor: HexColor(
+                                                  getProductStateColour(index)),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ),

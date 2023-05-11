@@ -84,7 +84,7 @@ class _ShowCategoryState extends State<ShowCategory> {
         if (result != null) {
           createdCocktail = result;
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('cocktail creato con successo'),
+            content: Text('Cocktail creato con successo'),
           ));
 
           return createdCocktail;
@@ -389,7 +389,7 @@ class _ShowCategoryState extends State<ShowCategory> {
                             onTap: () {
                               var newItem = {
                                 'order_id': widget.order['id'],
-                                'order_state_id': defaultOrderState,
+                                'order_state_id': defaultProductState,
                                 'price': double.parse(
                                     widget.filteredProducts[index]['price']),
                                 'quantity': 1,
@@ -549,7 +549,7 @@ class _ShowCategoryState extends State<ShowCategory> {
                           //CREA OGGETTO DA PASSARE ALL'ORDINE COI VALORI RITORNATI DALLA FUNZIONE
                           var newItem = {
                             'order_id': widget.order['id'],
-                            'order_state_id': defaultOrderState,
+                            'order_state_id': defaultProductState,
                             'price': widget.category['price_composed'],
                             'quantity': 1,
                             'product_id': createdCocktail['id'],

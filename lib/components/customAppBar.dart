@@ -57,7 +57,29 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 seeLogout
                     ? InkWell(
                         onTap: () {
-                          action!();
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.logout,
+                                        color: Colors.red,
+                                      ),
+                                      title: const Text(
+                                        'ESEGUI LOGOUT',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      onTap: () {
+                                        action!();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
                         },
                         child: Container(
                           margin: EdgeInsets.only(right: 26),

@@ -93,268 +93,190 @@ class _UpdateCustomProductState extends State<UpdateCustomProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: HexColor('#F4F3F3'),
-        appBar: CustomAppBar(),
-        body: SingleChildScrollView(
-            child: Column(children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    userName,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(today)
-                ]),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 30),
-            child: const Divider(
-              thickness: 0.5,
-              color: Colors.black,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: HexColor('#F4F3F3'),
+      appBar: CustomAppBar(),
+      body: SingleChildScrollView(
+          child: Column(children: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(
+              userName,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
+            Text(today)
+          ]),
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 30),
+          child: const Divider(
+            thickness: 0.5,
+            color: Colors.black,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: const [
-                  Text('COMANDA'),
-                  Text(
-                    'TAVOLO',
-                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              children: const [
+                Text('COMANDA'),
+                Text(
+                  'TAVOLO',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+                )
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(2),
+                  border: Border.all(width: 1, color: HexColor('#FF3131'))),
+              child: Text(
+                currentTable.toString(),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: HexColor('#FF3131'),
+                    fontWeight: FontWeight.w900),
+              ),
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: HexColor('#43ABFB')),
+                onPressed: () async {
+                  String refresh = await showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) => CustomModal(
+                            orderID: widget.order['id'],
+                          ));
+                  refresh == 'refresh' ? refreshData() : null;
+                },
+                child: const Text('CAMBIA TAVOLO')),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(width: 1, color: HexColor('#FF3131'))),
+              child: Row(
+                children: [
+                  Column(
+                    children: [
+                      Image.asset('assets/images/coperti2.png'),
+                      const Text(
+                        'COPERTI',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text(
+                      '${widget.coperti}',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: HexColor('#FF3131'),
+                          fontWeight: FontWeight.w800),
+                    ),
                   )
                 ],
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(2),
-                    border: Border.all(width: 1, color: HexColor('#FF3131'))),
-                child: Text(
-                  currentTable.toString(),
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: HexColor('#FF3131'),
-                      fontWeight: FontWeight.w900),
-                ),
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: HexColor('#43ABFB')),
-                  onPressed: () async {
-                    String refresh = await showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => CustomModal(
-                              orderID: widget.order['id'],
-                            ));
-                    refresh == 'refresh' ? refreshData() : null;
-                  },
-                  child: const Text('CAMBIA TAVOLO')),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(width: 1, color: HexColor('#FF3131'))),
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        Image.asset('assets/images/coperti2.png'),
-                        const Text(
-                          'COPERTI',
-                          style: TextStyle(
-                            fontSize: 8,
-                            fontWeight: FontWeight.w800,
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 50,
+        ),
+        Row(children: [
+          const Expanded(
+              child: Divider(
+            indent: 20,
+            endIndent: 20,
+            thickness: 2,
+            color: Colors.black,
+          )),
+          Text(
+            widget.category[0]['name'],
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+          ),
+          const Expanded(
+              child: Divider(
+            indent: 20,
+            endIndent: 20,
+            thickness: 2,
+            color: Colors.black,
+          )),
+        ]),
+        Column(
+          children: List.generate(
+              widget.filteredProducts.length,
+              (index) => InkWell(
+                    onTap: () {
+                      print(widget.filteredProducts[index]['id']);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: Material(
+                        borderRadius: BorderRadius.circular(10),
+                        elevation: 4,
+                        shadowColor: Colors.blueGrey,
+                        child: ListTile(
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 10),
+                          leading: Image.asset(
+                            'assets/images/logo.png',
+                            scale: 2.5,
                           ),
-                        )
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      child: Text(
-                        '${widget.coperti}',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: HexColor('#FF3131'),
-                            fontWeight: FontWeight.w800),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          Row(children: [
-            const Expanded(
-                child: Divider(
-              indent: 20,
-              endIndent: 20,
-              thickness: 2,
-              color: Colors.black,
-            )),
-            Text(
-              widget.category[0]['name'],
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-            ),
-            const Expanded(
-                child: Divider(
-              indent: 20,
-              endIndent: 20,
-              thickness: 2,
-              color: Colors.black,
-            )),
-          ]),
-          Column(
-            children: List.generate(
-                widget.filteredProducts.length,
-                (index) => InkWell(
-                      onTap: () {
-                        print(widget.filteredProducts[index]['id']);
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        child: Material(
-                          borderRadius: BorderRadius.circular(10),
-                          elevation: 4,
-                          shadowColor: Colors.blueGrey,
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 10),
-                            leading: Image.asset(
-                              'assets/images/logo.png',
-                              scale: 2.5,
-                            ),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(widget.filteredProducts[index]['name'],
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w700)),
-                                Text(
-                                  widget.filteredProducts[index]
-                                          ['description'] ??
-                                      'Nessuna descrizione',
-                                  style: TextStyle(
-                                      fontSize: 12, color: HexColor('#A1C2C5')),
-                                )
-                              ],
-                            ),
-                            subtitle: Container(
-                              margin: EdgeInsets.only(top: 30),
-                              child: Text(
-                                '€${widget.filteredProducts[index]['price']}',
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(widget.filteredProducts[index]['name'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700)),
+                              Text(
+                                widget.filteredProducts[index]['description'] ??
+                                    'Nessuna descrizione',
                                 style: TextStyle(
-                                    color: HexColor('#43ABFB'),
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            trailing: CustomSwitch(
-                              orderDetail: widget.orderDetail,
-                              currentList: currentList,
-                              action: (p0) {
-                                setState(() {
-                                  list[index] = p0;
-                                });
-                              },
-                              selected: list[index],
-                              product: widget.filteredProducts[index],
-                            ),
-                            tileColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                                    fontSize: 12, color: HexColor('#A1C2C5')),
+                              )
+                            ],
                           ),
+                          subtitle: Container(
+                            margin: EdgeInsets.only(top: 30),
+                            child: Text(
+                              '€${widget.filteredProducts[index]['price']}',
+                              style: TextStyle(
+                                  color: HexColor('#43ABFB'),
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          trailing: CustomSwitch(
+                            orderDetail: widget.orderDetail,
+                            currentList: currentList,
+                            action: (p0) {
+                              setState(() {
+                                list[index] = p0;
+                              });
+                            },
+                            selected: list[index],
+                            product: widget.filteredProducts[index],
+                          ),
+                          tileColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
-                    )),
-          )
-        ])),
-        bottomNavigationBar: Container(
-          width: MediaQuery.of(context).size.width,
-          margin:
-              const EdgeInsets.only(bottom: 18, left: 18, right: 18, top: 10),
-          // child: Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //   children: [
-          // InkWell(
-          //   onTap: () {
-          //     Navigator.pop(context);
-          //   },
-          //   child: Container(
-          //     padding: const EdgeInsets.symmetric(horizontal: 40),
-
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(8),
-          //       color: HexColor('#438C71'),
-          //     ),
-          //     // width: 100,
-          //     height: 70,
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: const [
-          //         Text(
-          //           'TORNA A',
-          //           style: TextStyle(
-          //               color: Colors.white, fontWeight: FontWeight.w300),
-          //         ),
-          //         Text(
-          //           'INDIETRO',
-          //           style: TextStyle(
-          //               color: Colors.white, fontWeight: FontWeight.w800),
-          //         )
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          child: InkWell(
-            onTap: () {
-              // if (currentList.isNotEmpty) {
-              //   //SE LA LISTA DEGLI ID AGGIUNTI NON E' VUOTA, AGGIUNGILI A QUELLI PRECEDENTI
-              //   // for (var element in widget.orderDetail['custom_product']) {
-              //   //   currentList.add(element);
-              //   //   widget.orderDetail['custom_product'] = currentList;
-              //   // }
-              // }
-              Navigator.pop(context, 'refresh');
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: HexColor('#438C71'),
-              ),
-              height: 70,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    'CONFERMA',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w300),
-                  ),
-                  Text(
-                    'MODIFICA',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w800),
-                  )
-                ],
-              ),
-            ),
-            //   ),
-            // ],
-          ),
-        ));
+                    ),
+                  )),
+        )
+      ])),
+    );
   }
 }

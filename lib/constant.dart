@@ -1,5 +1,5 @@
-import 'package:meari/pages/orders/confirmProduct.dart';
-import 'package:meari/pages/orders/chooseCategory.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 Map<dynamic, dynamic> apiData = {};
 List orders = [];
@@ -12,6 +12,7 @@ int? userID;
 String? currentTable;
 String userName = '';
 int? defaultOrderState;
+int? defaultProductState;
 DateTime date = DateTime.parse(DateTime.now().toString());
 var mm = date.month;
 var day = date.day;
@@ -26,3 +27,11 @@ String today = '$yy/$mm/$day';
 bool confirmUpdate = false;
 bool loading = false;
 bool seeLogout = false;
+// updateWebSocket() {
+//   final wsUrl = Uri.parse('wss://echo.websocket.events');
+//   var channel = WebSocketChannel.connect(wsUrl);
+//   print('object');
+//   channel.sink.add(true);
+//   channel.sink.close(status.goingAway);
+//   return channel;
+// }

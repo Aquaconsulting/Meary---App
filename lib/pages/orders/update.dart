@@ -89,13 +89,13 @@ class _UpdateOrderState extends State<UpdateOrder> {
     return customProducts;
   }
 
-  getProductStateName(int index) {
-    for (var element in product_states) {
-      if (element['id'] == widget.orderDetail[index]['order_state_id']) {
-        return '(${element['current_state']})';
-      }
-    }
-  }
+  // getProductStateName(int index) {
+  //   for (var element in product_states) {
+  //     if (element['id'] == widget.orderDetail[index]['order_state_id']) {
+  //       return element['state_colour'];
+  //     }
+  //   }
+  // }
 
   getProductStateColour(int index) {
     for (var element in product_states) {
@@ -526,12 +526,25 @@ class _UpdateOrderState extends State<UpdateOrder> {
                                           child: Container(
                                             margin: const EdgeInsets.only(
                                                 top: 20, bottom: 36),
-                                            child: Text(
-                                              '${getProductName(widget.orderDetail[index])} '
-                                              '${getProductStateName(index) ?? ''}',
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 20),
+                                            child: Wrap(
+                                              children: [
+                                                Text(
+                                                  '${getProductName(widget.orderDetail[index])} ',
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 20),
+                                                ),
+                                                Container(
+                                                  width: 10,
+                                                  height: 10,
+                                                  child: CircleAvatar(
+                                                    backgroundColor: HexColor(
+                                                        getProductStateColour(
+                                                            index)),
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           ),
                                         ),
