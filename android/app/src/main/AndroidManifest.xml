@@ -6,7 +6,7 @@
         
         android:usesCleartextTraffic="true"
         android:label="meari"
-        android:name="Meari"
+        android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

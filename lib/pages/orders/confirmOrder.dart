@@ -101,7 +101,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
 
   addOrderDetail() {
     try {
-      Services.addOrderDetail(widget.orderDetail).then((result) {
+      Services.addFullOrder(widget.order['user_id'], widget.order['table_id'],
+              widget.orderDetail)
+          .then((result) {
         if (result) {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => Home(userID: userID!)));
@@ -424,7 +426,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                 'product_id': coperto[0]['id']
                               };
                               // AGGIUNGILO ALLA LISTA DI PRODOTTI
-
+                              print('FINAL COPERTO ${finalCoperto.toString()}');
                               widget.orderDetail.add(finalCoperto);
                               addOrderDetail();
                             }

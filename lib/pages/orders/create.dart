@@ -40,48 +40,71 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   Object currentItem = {};
   TextEditingController noteController = TextEditingController();
   dynamic order;
-  addOrder() {
-    try {
-      Services.addOrder(widget.userID, value!, 'nessuna nota', DateTime.now(),
-              defaultOrderState!)
-          .then((result) {
-        if (result != false) {
-          //SE LA L'API RITORNA L'OGGETTO PRENDO ID DELL'ORDINE APPENA CREATO E LO PASSO ALLA PAGINA SUCCESSIVA
-          order = result;
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddPlace(
-                        table: tables.where(
-                            (element) => element['id'] == order['table_id']),
-                        userName: widget.userName,
-                        userID: widget.userID,
-                        order: order,
-                        products: products,
-                        categories: categories,
-                      )));
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Ordine creato con successo'),
-          ));
-        } else {
-          // SE INVECE RITORNA FALSE MOSTRA QUESTO
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                    title: const Text('Qualcosa è andato storto.'),
-                    content:
-                        const Text('Controlla la tua connessione e riprova.'),
-                    actions: [
-                      TextButton(
-                          onPressed: (() {
-                            Navigator.pop(context);
-                          }),
-                          child: const Text('Chiudi'))
-                    ],
-                  ));
-        }
-      });
-    } catch (e) {}
+  addOrder({table}) {
+    final Map<String, dynamic> cleanOrder = {
+      'user_id': widget.userID,
+      'table_id': table,
+      'note': 'nessuna nota',
+      'order_state_id': 1,
+      'date': DateTime.now(),
+      'updated_at': DateTime.now(),
+      'created_at': DateTime.now(),
+      'id': 0
+    };
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddPlace(
+                  table: table,
+                  userName: widget.userName,
+                  userID: widget.userID,
+                  order: cleanOrder,
+                  products: products,
+                  categories: categories,
+                )));
+
+    // try {
+    //   Services.addOrder(widget.userID, value!, 'nessuna nota', DateTime.now(),
+    //           defaultOrderState!)
+    //       .then((result) {
+    //     if (result != false) {
+    //       //SE LA L'API RITORNA L'OGGETTO PRENDO ID DELL'ORDINE APPENA CREATO E LO PASSO ALLA PAGINA SUCCESSIVA
+    //       order = result;
+    //       Navigator.push(
+    //           context,
+    //           MaterialPageRoute(
+    //               builder: (context) => AddPlace(
+    //                     table: tables.where(
+    //                         (element) => element['id'] == order['table_id']),
+    //                     userName: widget.userName,
+    //                     userID: widget.userID,
+    //                     order: order,
+    //                     products: products,
+    //                     categories: categories,
+    //                   )));
+    //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //         content: Text('Ordine creato con successo'),
+    //       ));
+    //     } else {
+    //       // SE INVECE RITORNA FALSE MOSTRA QUESTO
+    //       showDialog(
+    //           context: context,
+    //           builder: (context) => AlertDialog(
+    //                 title: const Text('Qualcosa è andato storto.'),
+    //                 content:
+    //                     const Text('Controlla la tua connessione e riprova.'),
+    //                 actions: [
+    //                   TextButton(
+    //                       onPressed: (() {
+    //                         Navigator.pop(context);
+    //                       }),
+    //                       child: const Text('Chiudi'))
+    //                 ],
+    //               ));
+    //     }
+    //   });
+    // } catch (e) {}
   }
 
   int? value;
@@ -249,7 +272,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                               // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
                               if (getTableColour(index) == null ||
                                   getTableColour(index) == '#4BC59E') {
-                                addOrder();
+                                addOrder(table: tables[index]['id']);
                               }
                             },
                             child: Container(

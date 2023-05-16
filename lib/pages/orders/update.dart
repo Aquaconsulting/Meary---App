@@ -99,6 +99,8 @@ class _UpdateOrderState extends State<UpdateOrder> {
 
   getProductStateColour(int index) {
     for (var element in product_states) {
+      print(element['id']);
+      print(widget.orderDetail[index]['order_state_id']);
       if (element['id'] == widget.orderDetail[index]['order_state_id']) {
         return element['state_colour'];
       }
@@ -136,7 +138,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                     child: Container(
                       child: Image.asset(
                         'assets/images/back.png',
-                        scale: 1.1,
+                        scale: 1.5,
                       ),
                     ),
                   ),
@@ -549,11 +551,11 @@ class _UpdateOrderState extends State<UpdateOrder> {
                                                 Container(
                                                   width: 10,
                                                   height: 10,
-                                                  child: CircleAvatar(
-                                                    backgroundColor: HexColor(
-                                                        getProductStateColour(
-                                                            index)),
-                                                  ),
+                                                  // child: CircleAvatar(
+                                                  //   backgroundColor: HexColor(
+                                                  //       getProductStateColour(
+                                                  //           index)),
+                                                  // ),
                                                 )
                                               ],
                                             ),

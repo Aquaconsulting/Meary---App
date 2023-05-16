@@ -5,6 +5,67 @@ import 'package:meari/api/api.dart';
 import 'package:meari/constant.dart';
 
 class Services {
+  static Future<dynamic> addFullOrder(
+      int userID, int tableID, List details) async {
+    String token = await API().getToken();
+    print('entra qui? $userID $tableID');
+    DateTime date = DateTime.now();
+    try {
+      final response = await http.post(
+        Uri.parse('https://meari.aquaconsulting.it/api/orders/'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: jsonEncode(<String, dynamic>{
+          'user_id': userID,
+          'table_id': tableID,
+          'note': 'note',
+          'date': date.toIso8601String(),
+          'order_state_id': 1,
+        }),
+      );
+      print('order added : ${response.body}');
+      final Map<String, dynamic> orderAdded = json.decode(response.body);
+
+      List<Map<String, dynamic>>? finalDetail = [];
+
+      finalDetail = [
+        for (int i = 0; i < details.length; i++)
+          {
+            "order_id": "${orderAdded['id']}",
+            "product_id": "${details[i]['product_id']}",
+            "note": details[i]['note'] == null
+                ? 'nessuna nota'
+                : "${details[i]['note']}",
+            "quantity": "${details[i]['quantity']}",
+            "price": "${details[i]['price']}",
+            "order_state_id": orderAdded['order_state_id'],
+            "custom_product": "${details[i]['custom_product']}"
+          }
+      ];
+      print('finaldetail ADD FULL ORDER: ' + finalDetail.toString());
+      try {
+        final response = await http.post(
+          Uri.parse('https://meari.aquaconsulting.it/api/order_details/'),
+          headers: {
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.authorizationHeader: "Bearer $token"
+          },
+          body: jsonEncode(<String, dynamic>{"orderData": finalDetail}),
+        );
+
+        json.decode(response.body);
+        // updateWebSocket();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
   // STORE ORDER
   static Future<dynamic> addOrder(int userID, int tableID, String note,
       DateTime date, int orderStateID) async {
@@ -27,6 +88,7 @@ class Services {
         }),
       );
       final Map<String, dynamic> parsed = json.decode(response.body);
+      print('PARSED: ${parsed.toString()}');
       return parsed;
     } catch (e) {
       return false;
@@ -134,6 +196,7 @@ class Services {
           "custom_product": "${details[i]['custom_product']}"
         }
     ];
+    print('finaldetail: ' + finalDetail.toString());
     try {
       final response = await http.post(
         Uri.parse('https://meari.aquaconsulting.it/api/order_details/'),
