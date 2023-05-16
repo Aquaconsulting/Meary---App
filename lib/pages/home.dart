@@ -136,6 +136,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: HexColor('#F4F3F3'),
       appBar: CustomAppBar(
+        isPopAble: false,
         action: () {
           logout();
         },

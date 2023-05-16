@@ -129,6 +129,17 @@ class _UpdateOrderState extends State<UpdateOrder> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  InkWell(
+                    onTap: () {
+                      loading ? null : Navigator.pop(context, 'refresh');
+                    },
+                    child: Container(
+                      child: Image.asset(
+                        'assets/images/back.png',
+                        scale: 1.1,
+                      ),
+                    ),
+                  ),
                   Text(
                     userName,
                     style: const TextStyle(

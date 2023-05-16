@@ -17,10 +17,11 @@ class HexColor extends Color {
 }
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-  CustomAppBar({super.key, this.action})
+  CustomAppBar({super.key, this.action, this.isPopAble})
       : preferredSize = Size.fromHeight(70.0);
   final Size preferredSize;
   Function? action;
+  bool? isPopAble;
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
@@ -36,18 +37,24 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            InkWell(
-              onTap: () {
-                loading ? null : Navigator.pop(context, 'refresh');
-              },
-              child: Container(
-                margin: const EdgeInsets.only(left: 20),
-                child: Image.asset(
-                  'assets/images/back.png',
-                  scale: 1,
+            if (isPopAble == null)
+              InkWell(
+                onTap: () {
+                  loading ? null : Navigator.pop(context, 'refresh');
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(left: 20),
+                  child: Image.asset(
+                    'assets/images/back.png',
+                    scale: 1,
+                  ),
                 ),
               ),
-            ),
+            if (isPopAble != null)
+              Container(
+                margin: const EdgeInsets.only(left: 20),
+                width: 50,
+              ),
             Image.asset(
               'assets/images/logo.png',
               scale: 2,
@@ -90,25 +97,28 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                         ),
                       )
                     : Container(),
-                InkWell(
-                  onTap: () {
-                    loading
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Home(
-                                      userID: userID!,
-                                    )));
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 20),
-                    child: Image.asset(
-                      'assets/images/appbarSquare.png',
-                      scale: 1.1,
+                if (isPopAble == null)
+                  InkWell(
+                    onTap: () {
+                      loading
+                          ? null
+                          : Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Home(
+                                        userID: userID!,
+                                      )),
+                              (Route<dynamic> route) => false,
+                            );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 20),
+                      child: Image.asset(
+                        'assets/images/appbarSquare.png',
+                        scale: 1.1,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ],

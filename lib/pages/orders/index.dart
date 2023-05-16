@@ -148,261 +148,284 @@ class _OrderListState extends State<OrderList> {
                       shrinkWrap: true,
                       itemCount: orders.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          height: 170,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 3),
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 30),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 20),
-                                decoration: BoxDecoration(
-                                    color: HexColor(orders[index]['order_state']
-                                        ['state_colour']),
-                                    borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(8),
-                                        topLeft: Radius.circular(8))),
-                                child: Row(
+                        return InkWell(
+                          onTap: () {
+                            currentTable = orders[index]['table']['name'];
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UpdateOrder(
+                                          order: orders[index],
+                                          orderDetail: orderDetails
+                                              .where((element) =>
+                                                  element['order_id'] ==
+                                                  orders[index]['id'])
+                                              .toList(),
+                                        )));
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            height: 170,
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.white),
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 30),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 20),
+                                  decoration: BoxDecoration(
+                                      color: HexColor(orders[index]
+                                          ['order_state']['state_colour']),
+                                      borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(8),
+                                          topLeft: Radius.circular(8))),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text('COMANDA',
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        color: Colors.white)),
+                                                const Text('  '),
+                                                Text(
+                                                    'ID-${orders[index]['id']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 25,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.white)),
+                                              ],
+                                            ),
+                                            Text(
+                                                'Tavolo - ${orders[index]['table']['name']}',
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white))
+                                          ],
+                                        ),
+                                      ),
+                                      //Icona
+                                      // InkWell(
+                                      //   onTap: () {
+                                      //     currentTable =
+                                      //         orders[index]['table']['name'];
+                                      //     Navigator.push(
+                                      //         context,
+                                      //         MaterialPageRoute(
+                                      //             builder: (context) =>
+                                      //                 UpdateOrder(
+                                      //                   order: orders[index],
+                                      //                   orderDetail: orderDetails
+                                      //                       .where((element) =>
+                                      //                           element[
+                                      //                               'order_id'] ==
+                                      //                           orders[index]
+                                      //                               ['id'])
+                                      //                       .toList(),
+                                      //                 )));
+                                      //   },
+                                      //   child: Container(
+                                      //     // margin: const EdgeInsets.only(left: 40),
+                                      //     decoration: BoxDecoration(
+                                      //         color: Colors.white,
+                                      //         borderRadius:
+                                      //             BorderRadius.circular(5)),
+                                      //     width: 42,
+                                      //     height: 42,
+                                      //     child: Image.asset(
+                                      //         'assets/images/pen4.png'),
+                                      //   ),
+                                      // ),
+                                      InkWell(
+                                        onTap: () {
+                                          //SE L'ORDINE E' GIA' IN PAGAMENTO ALLORA MOSTRA IL MESSAGGIO
+                                          if (orders[index]['order_state']
+                                                  ['state_colour'] ==
+                                              '#D0EE00') {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                              duration:
+                                                  Duration(milliseconds: 1500),
+                                              content: Text(
+                                                  'Ordine già in pagamento.'),
+                                            ));
+                                          } else {
+                                            //ALTRIMENTI LA MODALE CON IL BOTTONE PER CAMBIARE STATO
+                                            showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) {
+                                                  return Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      ListTile(
+                                                        leading: Icon(
+                                                          Icons
+                                                              .payments_outlined,
+                                                          color: HexColor(
+                                                              '#43ABFB'),
+                                                        ),
+                                                        title: const Text(
+                                                          'CAMBIA STATO IN PAGAMENTO',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                        onTap: () {
+                                                          changeState(
+                                                              orders[index]
+                                                                  ['id']);
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          }
+                                        },
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          width: 42,
+                                          height: 42,
+                                          child: Icon(
+                                            Icons.payments_outlined,
+                                            color: HexColor('#43ABFB'),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Container(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Text('COMANDA',
-                                                  style: TextStyle(
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      color: Colors.white)),
-                                              const Text('  '),
-                                              Text('ID-${orders[index]['id']}',
-                                                  style: const TextStyle(
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Colors.white)),
-                                            ],
-                                          ),
-                                          Text(
-                                              'Tavolo - ${orders[index]['table']['name']}',
-                                              style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.white))
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        currentTable =
-                                            orders[index]['table']['name'];
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    UpdateOrder(
-                                                      order: orders[index],
-                                                      orderDetail: orderDetails
-                                                          .where((element) =>
-                                                              element[
-                                                                  'order_id'] ==
-                                                              orders[index]
-                                                                  ['id'])
-                                                          .toList(),
-                                                    )));
-                                      },
-                                      child: Container(
-                                        // margin: const EdgeInsets.only(left: 40),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        width: 42,
-                                        height: 42,
-                                        child: Image.asset(
-                                            'assets/images/pen4.png'),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        //SE L'ORDINE E' GIA' IN PAGAMENTO ALLORA MOSTRA IL MESSAGGIO
-                                        if (orders[index]['order_state']
-                                                ['state_colour'] ==
-                                            '#D0EE00') {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
-                                            duration:
-                                                Duration(milliseconds: 1500),
-                                            content: Text(
-                                                'Ordine già in pagamento.'),
-                                          ));
-                                        } else {
-                                          //ALTRIMENTI LA MODALE CON IL BOTTONE PER CAMBIARE STATO
-                                          showModalBottomSheet(
-                                              context: context,
-                                              builder: (context) {
-                                                return Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      leading: Icon(
-                                                        Icons.payments_outlined,
-                                                        color:
-                                                            HexColor('#43ABFB'),
-                                                      ),
-                                                      title: const Text(
-                                                        'CAMBIA STATO IN PAGAMENTO',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                      onTap: () {
-                                                        changeState(
-                                                            orders[index]
-                                                                ['id']);
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                        }
-                                      },
-                                      child: Container(
-                                        margin: EdgeInsets.only(right: 10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        width: 42,
-                                        height: 42,
-                                        child: Icon(
-                                          Icons.payments_outlined,
-                                          color: HexColor('#43ABFB'),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 10, right: 5),
-                                        child: Text('€',
-                                            style: TextStyle(
-                                                color: HexColor('#43ABFB'),
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 25)),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            getOrderPrice(index).toString() !=
-                                                    'null'
-                                                ? getOrderPrice(index)
-                                                    .toStringAsFixed(2)
-                                                : '0',
-                                            style: TextStyle(
-                                                color: HexColor('#43ABFB'),
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            'Totale',
-                                            style: TextStyle(
-                                                color: HexColor('#43ABFB'),
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 12),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: List.generate(
-                                        getDestination(index).length,
-                                        (index) => Container(
-                                              decoration: BoxDecoration(
-                                                  color: destinazioniFinali[
-                                                              index] ==
-                                                          'Cucina'
-                                                      ? HexColor('#438C71')
-                                                      : HexColor('#43ABFB'),
-                                                  borderRadius:
-                                                      BorderRadius.circular(4)),
-                                              margin:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 8),
-                                              child: Text(
-                                                destinazioniFinali[index]
-                                                    .toString()
-                                                    .toUpperCase(),
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                              ),
-                                            )),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 20),
-                                    child: Row(
+                                    Row(
                                       children: [
                                         Container(
-                                            margin:
-                                                const EdgeInsets.only(right: 4),
-                                            child: Image.asset(
-                                                'assets/images/clock.png')),
+                                          margin: const EdgeInsets.only(
+                                              left: 10, right: 5),
+                                          child: Text('€',
+                                              style: TextStyle(
+                                                  color: HexColor('#43ABFB'),
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 25)),
+                                        ),
                                         Column(
                                           children: [
                                             Text(
-                                              getOrderMinutes(index).toString(),
+                                              getOrderPrice(index).toString() !=
+                                                      'null'
+                                                  ? getOrderPrice(index)
+                                                      .toStringAsFixed(2)
+                                                  : '0',
                                               style: TextStyle(
                                                   color: HexColor('#43ABFB'),
-                                                  fontWeight: FontWeight.w700),
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 16),
                                             ),
                                             Text(
-                                              'min.',
+                                              'Totale',
                                               style: TextStyle(
                                                   color: HexColor('#43ABFB'),
-                                                  fontWeight: FontWeight.w400),
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 12),
                                             )
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Row(
+                                      children: List.generate(
+                                          getDestination(index).length,
+                                          (index) => Container(
+                                                decoration: BoxDecoration(
+                                                    color: destinazioniFinali[
+                                                                index] ==
+                                                            'Cucina'
+                                                        ? HexColor('#438C71')
+                                                        : HexColor('#43ABFB'),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4)),
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8),
+                                                child: Text(
+                                                  destinazioniFinali[index]
+                                                      .toString()
+                                                      .toUpperCase(),
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
+                                              )),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 20),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                              margin: const EdgeInsets.only(
+                                                  right: 4),
+                                              child: Image.asset(
+                                                  'assets/images/clock.png')),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                getOrderMinutes(index)
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: HexColor('#43ABFB'),
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                              Text(
+                                                'min.',
+                                                style: TextStyle(
+                                                    color: HexColor('#43ABFB'),
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }),
