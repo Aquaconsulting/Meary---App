@@ -163,19 +163,19 @@ class _ShowCategoryState extends State<ShowCategory> {
                       fontWeight: FontWeight.w900),
                 ),
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: HexColor('#43ABFB')),
-                  onPressed: () async {
-                    String refresh = await showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => CustomModal(
-                              orderID: widget.order['id'],
-                            ));
-                    refresh == 'refresh' ? refreshData() : null;
-                  },
-                  child: const Text('CAMBIA TAVOLO')),
+              // ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //         backgroundColor: HexColor('#43ABFB')),
+              //     onPressed: () async {
+              //       String refresh = await showDialog(
+              //           barrierDismissible: false,
+              //           context: context,
+              //           builder: (context) => CustomModal(
+              //                 orderID: widget.order['id'],
+              //               ));
+              //       refresh == 'refresh' ? refreshData() : null;
+              //     },
+              //     child: const Text('CAMBIA TAVOLO')),
               InkWell(
                 onTap: () async {
                   await showDialog(

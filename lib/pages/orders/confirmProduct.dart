@@ -192,19 +192,19 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                       fontWeight: FontWeight.w900),
                 ),
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: HexColor('#43ABFB')),
-                  onPressed: () async {
-                    String refresh = await showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => CustomModal(
-                              orderID: widget.order['id'],
-                            ));
-                    refresh == 'refresh' ? refreshData() : null;
-                  },
-                  child: const Text('CAMBIA TAVOLO')),
+              // ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //         backgroundColor: HexColor('#43ABFB')),
+              //     onPressed: () async {
+              //       String refresh = await showDialog(
+              //           barrierDismissible: false,
+              //           context: context,
+              //           builder: (context) => CustomModal(
+              //                 orderID: widget.order['id'],
+              //               ));
+              //       refresh == 'refresh' ? refreshData() : null;
+              //     },
+              //     child: const Text('CAMBIA TAVOLO')),
               InkWell(
                 onTap: () async {
                   await showDialog(
@@ -677,8 +677,9 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                                       vertical:
                                                                           10),
                                                                   backgroundColor:
-                                                                      HexColor(
-                                                                          '#CDD4D9')),
+                                                                      Colors
+                                                                          .green
+                                                                          .shade400),
                                                               onPressed: () {
                                                                 //SE L'UTENTE CLICCA CONFERMA LE NOTE SARANNO UGUALI AL VALORE DEL TEXTFIELD
                                                                 Navigator.pop(
@@ -702,8 +703,8 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                                                       vertical:
                                                                           10),
                                                                   backgroundColor:
-                                                                      HexColor(
-                                                                          '#43ABFB')),
+                                                                      Colors
+                                                                          .red),
                                                               onPressed: () {
                                                                 //SE L'UTENTE CLICCA CANCELLA LE NOTE SARANNO VUOTE
                                                                 widget.orderDetail[
@@ -868,7 +869,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: HexColor('#98B8BA'),
+                  color: Colors.green,
                 ),
                 width: 100,
                 height: 80,

@@ -1,9 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:meari/api/api.dart';
 import 'package:meari/components/customModal.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/orders/chooseCategory.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddPlace extends StatefulWidget {
   AddPlace(
@@ -31,6 +38,38 @@ class _AddPlaceState extends State<AddPlace> {
   void refreshData() {
     setState(() {
       value = true;
+    });
+  }
+
+  Future<Map<String, dynamic>> fetchData() async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    userName = pre.getString('name')!;
+    String token = await API().getToken();
+    var url = 'https://meari.aquaconsulting.it/api/apiData';
+    var response = await http.get(Uri.parse(url), headers: {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    });
+    await Future.delayed(const Duration(milliseconds: 1500));
+    loading = false;
+    try {
+      final dynamic parsed = json.decode(utf8.decode(response.bodyBytes));
+      return parsed;
+    } catch (e) {
+      return {'e': e};
+    }
+  }
+
+  //funzione async per caricamento dati con try catch
+  Future<void> loadData() async {
+    setState(() {
+      loading = true;
+    });
+    apiData = await fetchData();
+    products = apiData['products'];
+
+    setState(() {
+      loading = false;
     });
   }
 
@@ -93,19 +132,19 @@ class _AddPlaceState extends State<AddPlace> {
                             fontWeight: FontWeight.w900),
                       ),
                     ),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: HexColor('#43ABFB')),
-                        onPressed: () async {
-                          String refresh = await showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) => CustomModal(
-                                    orderID: widget.order['id'],
-                                  ));
-                          refresh == 'refresh' ? refreshData() : null;
-                        },
-                        child: const Text('CAMBIA TAVOLO'))
+                    // ElevatedButton(
+                    //     style: ElevatedButton.styleFrom(
+                    //         backgroundColor: HexColor('#43ABFB')),
+                    //     onPressed: () async {
+                    //       String refresh = await showDialog(
+                    //           barrierDismissible: false,
+                    //           context: context,
+                    //           builder: (context) => CustomModal(
+                    //                 orderID: 0,
+                    //               ));
+                    //       refresh == 'refresh' ? refreshData() : null;
+                    //     },
+                    //     child: const Text('CAMBIA TAVOLO'))
                   ],
                 ),
               ],
@@ -236,7 +275,8 @@ class _AddPlaceState extends State<AddPlace> {
                 'AGGIUNGI CATEGORIA',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              onPressed: () {
+              onPressed: () async {
+                // await loadData();
                 Navigator.push(
                     context,
                     MaterialPageRoute(

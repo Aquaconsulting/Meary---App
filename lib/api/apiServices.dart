@@ -6,9 +6,8 @@ import 'package:meari/constant.dart';
 
 class Services {
   static Future<dynamic> addFullOrder(
-      int userID, int tableID, List details) async {
+      int userID, int tableID, List details, String noteComanda) async {
     String token = await API().getToken();
-    print('entra qui? $userID $tableID');
     DateTime date = DateTime.now();
     try {
       final response = await http.post(
@@ -20,12 +19,11 @@ class Services {
         body: jsonEncode(<String, dynamic>{
           'user_id': userID,
           'table_id': tableID,
-          'note': 'note',
+          'note': noteComanda,
           'date': date.toIso8601String(),
           'order_state_id': 1,
         }),
       );
-      print('order added : ${response.body}');
       final Map<String, dynamic> orderAdded = json.decode(response.body);
 
       List<Map<String, dynamic>>? finalDetail = [];

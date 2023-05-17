@@ -184,19 +184,19 @@ class _UpdateOrderState extends State<UpdateOrder> {
                       fontWeight: FontWeight.w900),
                 ),
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: HexColor('#43ABFB')),
-                  onPressed: () async {
-                    String refresh = await showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => CustomModal(
-                              orderID: widget.order['id'],
-                            ));
-                    refresh == 'refresh' ? refreshData() : null;
-                  },
-                  child: const Text('CAMBIA TAVOLO')),
+              // ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //         backgroundColor: HexColor('#43ABFB')),
+              //     onPressed: () async {
+              //       String refresh = await showDialog(
+              //           barrierDismissible: false,
+              //           context: context,
+              //           builder: (context) => CustomModal(
+              //                 orderID: widget.order['id'],
+              //               ));
+              //       refresh == 'refresh' ? refreshData() : null;
+              //     },
+              //     child: const Text('CAMBIA TAVOLO')),
               InkWell(
                 onTap: () async {
                   await showDialog(
@@ -752,7 +752,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                                                                           .spaceAround,
                                                                   children: [
                                                                     TextButton.icon(
-                                                                        style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), backgroundColor: HexColor('#CDD4D9')),
+                                                                        style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), backgroundColor: Colors.green.shade400),
                                                                         onPressed: () {
                                                                           //SE L'UTENTE CLICCA CONFERMA LE NOTE SARANNO UGUALI AL VALORE DEL TEXTFIELD
                                                                           Navigator.pop(
@@ -762,7 +762,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                                                                           'assets/images/pen3.png',
                                                                         ),
                                                                         label: const Text(
-                                                                          'CONFERM',
+                                                                          'CONFERMA',
                                                                           style:
                                                                               TextStyle(color: Colors.white),
                                                                         )),
@@ -773,8 +773,8 @@ class _UpdateOrderState extends State<UpdateOrder> {
                                                                                     10,
                                                                                 vertical:
                                                                                     10),
-                                                                            backgroundColor: HexColor(
-                                                                                '#43ABFB')),
+                                                                            backgroundColor: Colors
+                                                                                .red),
                                                                         onPressed:
                                                                             () {
                                                                           //SE L'UTENTE CLICCA CANCELLA LE NOTE SARANNO VUOTE
@@ -930,7 +930,7 @@ class _UpdateOrderState extends State<UpdateOrder> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: HexColor('#98B8BA'),
+                    color: Colors.green,
                   ),
                   width: 100,
                   height: 80,

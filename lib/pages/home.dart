@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
   }
 
   //funzione async per caricamento dati con try catch
-  loadData() async {
+  Future<void> loadData() async {
     setState(() {
       loading = true;
     });
@@ -171,6 +171,7 @@ class _HomeState extends State<Home> {
                             InkWell(
                               onTap: () async {
                                 //USANDO LA STESSA PAGINA DI CONFERMA PER UPDATE E STORE QUESTA VARIABILE SERVER PER STABILIRE LA ROTTA DA USARE
+                                await loadData();
                                 confirmUpdate = false;
                                 Navigator.push(
                                     context,
@@ -207,9 +208,10 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 //USANDO LA STESSA PAGINA DI CONFERMA PER UPDATE E STORE QUESTA VARIABILE SERVER PER STABILIRE LA ROTTA DA USARE
                                 confirmUpdate = true;
+                                await loadData();
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
