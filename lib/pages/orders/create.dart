@@ -267,6 +267,28 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                   Container(
                                     width: 18,
                                     height: 22,
+                                    color: HexColor('#7200CC'),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 3),
+                                    child: const Text(
+                                      'IN RITARDO',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              decoration:
+                                  BoxDecoration(border: Border.all(width: 0.4)),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 18,
+                                    height: 22,
                                     color: HexColor('#FF3131'),
                                   ),
                                   Container(

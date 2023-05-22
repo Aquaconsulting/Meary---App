@@ -518,7 +518,7 @@ class _OrderListState extends State<OrderList> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                   child: const Text(
                     'IN PAGAMENTO',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 10),
                   ),
                 )
               ],
@@ -538,7 +538,7 @@ class _OrderListState extends State<OrderList> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                   child: const Text(
                     'PRONTA',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 10),
                   ),
                 )
               ],
@@ -558,7 +558,27 @@ class _OrderListState extends State<OrderList> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                   child: const Text(
                     'APERTA',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 10),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(border: Border.all(width: 0.4)),
+            child: Row(
+              children: [
+                Container(
+                  width: 18,
+                  height: 22,
+                  color: HexColor('#7200CC'),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  child: const Text(
+                    'IN RITARDO',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 10),
                   ),
                 )
               ],

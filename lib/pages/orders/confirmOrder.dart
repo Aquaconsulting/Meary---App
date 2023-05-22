@@ -185,6 +185,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             horizontal: 18, vertical: 20),
                         backgroundColor: HexColor('#4BC59E')),
                     onPressed: () {
+                      print('PRODUCT STATE: ' + product_states.toString());
                       if (widget.orderDetail.isNotEmpty) {
                         //SE LA ROTTA E' UPDATE NON AGGIUNGERE DI NUOVO I COPERTI
                         if (confirmUpdate) {
