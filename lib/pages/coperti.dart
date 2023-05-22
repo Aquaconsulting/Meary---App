@@ -56,6 +56,7 @@ class _AddPlaceState extends State<AddPlace> {
       final dynamic parsed = json.decode(utf8.decode(response.bodyBytes));
       return parsed;
     } catch (e) {
+      loading = false;
       return {'e': e};
     }
   }

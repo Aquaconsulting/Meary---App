@@ -193,224 +193,237 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
         appBar: CustomAppBar(),
         body: RefreshIndicator(
           onRefresh: () async => await loadData(),
-          child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: SizedBox.fromSize(
-              size: MediaQuery.of(context).size,
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(20),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            widget.userName,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          FloatingActionButton(
-                            onPressed: () async {
-                              await loadData();
-                            },
-                            child: Icon(Icons.refresh),
-                            backgroundColor: Colors.blue,
-                          ),
-                          Text(today),
-                        ]),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 20),
-                    width: MediaQuery.of(context).size.width,
-                    color: HexColor('#F4F3F3'),
+          child: (loading)
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: SizedBox.fromSize(
+                    size: MediaQuery.of(context).size,
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: const Text(
-                            'ASSEGNA TAVOLO',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 22),
+                          margin: const EdgeInsets.all(20),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  widget.userName,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                FloatingActionButton(
+                                  onPressed: () async {
+                                    await loadData();
+                                  },
+                                  child: Icon(Icons.refresh),
+                                  backgroundColor: Colors.blue,
+                                ),
+                                Text(today),
+                              ]),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20),
+                          width: MediaQuery.of(context).size.width,
+                          color: HexColor('#F4F3F3'),
+                          child: Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: const Text(
+                                  'ASSEGNA TAVOLO',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(width: 0.4)),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 18,
+                                          height: 22,
+                                          color: HexColor('#4BC59E'),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 3),
+                                          child: const Text(
+                                            'LIBERO',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(width: 0.4)),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 18,
+                                          height: 22,
+                                          color: HexColor('#7200CC'),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 3),
+                                          child: const Text(
+                                            'IN RITARDO',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(width: 0.4)),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 18,
+                                          height: 22,
+                                          color: HexColor('#FF3131'),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 3),
+                                          child: const Text(
+                                            'OCCUPATO',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(width: 0.4)),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 18,
+                                          height: 22,
+                                          color: HexColor('#D0EE00'),
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 3),
+                                          child: const Text(
+                                            'IN USCITA',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(width: 0.4)),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 18,
+                                          height: 22,
+                                          color: HexColor('#2F2DCF'),
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 3),
+                                          child: const Text(
+                                            'CONSEGNATO',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              decoration:
-                                  BoxDecoration(border: Border.all(width: 0.4)),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 18,
-                                    height: 22,
-                                    color: HexColor('#4BC59E'),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: const Text(
-                                      'LIBERO',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  )
-                                ],
-                              ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Wrap(
+                              children: List.generate(
+                                  tables.length,
+                                  (index) => InkWell(
+                                        onTap: () {
+                                          currentTable = tables[index]['name'];
+                                          value = tables[index]['id'];
+                                          // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
+                                          if (getTableColour(index) == null ||
+                                              getTableColour(index) ==
+                                                  '#4BC59E') {
+                                            addOrder(
+                                                table: tables[index]['id']);
+                                          }
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.4),
+                                                  spreadRadius: 2,
+                                                  blurRadius: 8,
+                                                  offset: const Offset(0, 3),
+                                                )
+                                              ],
+                                              color: HexColor(
+                                                  getTableColour(index) ??
+                                                      '#4BC59E'),
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 10),
+                                          height: 110,
+                                          width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3 -
+                                              20,
+                                          child: Center(
+                                            child: Text(
+                                              tables[index]['name'],
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 30),
+                                            ),
+                                          ),
+                                        ),
+                                      )),
                             ),
-                            Container(
-                              decoration:
-                                  BoxDecoration(border: Border.all(width: 0.4)),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 18,
-                                    height: 22,
-                                    color: HexColor('#7200CC'),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: const Text(
-                                      'IN RITARDO',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              decoration:
-                                  BoxDecoration(border: Border.all(width: 0.4)),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 18,
-                                    height: 22,
-                                    color: HexColor('#FF3131'),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: const Text(
-                                      'OCCUPATO',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              decoration:
-                                  BoxDecoration(border: Border.all(width: 0.4)),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 18,
-                                    height: 22,
-                                    color: HexColor('#D0EE00'),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: const Text(
-                                      'IN USCITA',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              decoration:
-                                  BoxDecoration(border: Border.all(width: 0.4)),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 18,
-                                    height: 22,
-                                    color: HexColor('#2F2DCF'),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: const Text(
-                                      'CONSEGNATO',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
+                          ),
                         )
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Wrap(
-                        children: List.generate(
-                            tables.length,
-                            (index) => InkWell(
-                                  onTap: () {
-                                    currentTable = tables[index]['name'];
-                                    value = tables[index]['id'];
-                                    // SE IL TAVOLO E' LIBERO ALLORA PERMETTI IL CLICK
-                                    if (getTableColour(index) == null ||
-                                        getTableColour(index) == '#4BC59E') {
-                                      addOrder(table: tables[index]['id']);
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.4),
-                                            spreadRadius: 2,
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 3),
-                                          )
-                                        ],
-                                        color: HexColor(
-                                            getTableColour(index) ?? '#4BC59E'),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 10),
-                                    height: 110,
-                                    width:
-                                        MediaQuery.of(context).size.width / 3 -
-                                            20,
-                                    child: Center(
-                                      child: Text(
-                                        tables[index]['name'],
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 30),
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
+                ),
         ));
   }
 }
