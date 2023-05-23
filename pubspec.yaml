@@ -39,6 +39,10 @@ dependencies:
   shared_preferences: ^2.0.18
   email_validator: ^2.1.17
   web_socket_channel: ^2.4.0
+  firebase_messaging: ^14.6.1
+  flutter_local_notifications: ^14.1.0
+  firebase_core: ^2.13.0
+  firebase_analytics: ^10.4.1
 
 dev_dependencies:
   flutter_test:

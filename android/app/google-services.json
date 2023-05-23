@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1002958468780",
+    "project_id": "meari-86237",
+    "storage_bucket": "meari-86237.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002958468780:android:b4a569e6d72c48e2a9d109",
+        "android_client_info": {
+          "package_name": "com.example.meari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002958468780-96acp2urtkrtki7rsf3f94tc35o8g58i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsWwGXO2IbhBLJ8Jc2Utaqz3yx0WVojnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1002958468780-96acp2urtkrtki7rsf3f94tc35o8g58i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1002958468780-s56mugrqqonr979ag00dc9qkb168tfsr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "it.meori.aqua.meoricucina"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002958468780:android:4b573b0ab8d471eaa9d109",
+        "android_client_info": {
+          "package_name": "it.meori.aqua.meoricucina"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002958468780-96acp2urtkrtki7rsf3f94tc35o8g58i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsWwGXO2IbhBLJ8Jc2Utaqz3yx0WVojnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1002958468780-96acp2urtkrtki7rsf3f94tc35o8g58i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1002958468780-s56mugrqqonr979ag00dc9qkb168tfsr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "it.meori.aqua.meoricucina"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

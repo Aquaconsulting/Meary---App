@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,6 +8,8 @@ import 'package:meari/components/customAppBar.dart';
 import 'package:meari/constant.dart';
 import 'package:meari/pages/home.dart';
 import 'package:meari/pages/orders/filterProducts.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
 
 class ConfirmOrder extends StatefulWidget {
   ConfirmOrder(
@@ -34,8 +38,15 @@ class HexColor extends Color {
 }
 
 class _ConfirmOrderState extends State<ConfirmOrder> {
-  String noteComanda = '';
+  late FirebaseMessaging firebaseMessaging;
 
+  @override
+  void initState() {
+    super.initState();
+    firebaseMessaging = FirebaseMessaging.instance;
+  }
+
+  String noteComanda = '';
   double totalPrice = 0;
   getTotalPrice() {
     double orderPrice = 0;
@@ -167,6 +178,37 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
     // }
   }
 
+  Future<void> sendPushMessage(
+      {token = String, body = String, title = String}) async {
+    try {
+      var response =
+          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization':
+                    'key=AAAA6YT7tqw:APA91bFlmwnZujnIhkuv9-F_LqN_CO9zEQCXVsMT_3tZLNXlzlLKA5j13dd-jGYll0c__UEvAHvwlAl8-A3y-yo5Yg41h3TaGo_EQc_-ZjfdIo4kwe2iDysZ-wcW1Ut11eDNogA6GEBK',
+              },
+              body: jsonEncode({
+                'priority': 'high',
+                'date': {
+                  'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+                  'status': 'done',
+                  'body': body,
+                  'title': title,
+                },
+                'notification': {
+                  'title': title,
+                  'body': body,
+                  'android_channel_id': 'cucina'
+                },
+                'to': token,
+              }));
+      print(response.body);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,7 +226,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 18, vertical: 20),
                         backgroundColor: HexColor('#4BC59E')),
-                    onPressed: () {
+                    onPressed: () async {
                       print('PRODUCT STATE: ' + product_states.toString());
                       if (widget.orderDetail.isNotEmpty) {
                         //SE LA ROTTA E' UPDATE NON AGGIUNGERE DI NUOVO I COPERTI
@@ -208,6 +250,28 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                           widget.orderDetail.add(finalCoperto);
                           addOrderDetail();
                         }
+                        print('+++++++++++++++++++++ ARRIVATO QUI');
+                        Map<String, String> dati = {
+                          'title': 'Titolo della notifica',
+                          'body': 'Corpo della notifica',
+                        };
+                        await firebaseMessaging.requestPermission(
+                          alert: true,
+                          announcement: false,
+                          badge: true,
+                          carPlay: false,
+                          criticalAlert: false,
+                          provisional: false,
+                          sound: true,
+                        );
+                        // await FirebaseMessaging.instance.sendMessage(
+                        //   to: '/topics/cucina',
+                        //   data: dati,
+                        // );
+                        await sendPushMessage(
+                            body: 'prova meari body',
+                            title: 'meari invio notifica',
+                            token: '/topics/cucina');
                       }
                     },
                     child: Row(
