@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "1002958468780-ksa88iclhnh8dmrgebnaa7ito9pu3j5b.apps.googleusercontent.com",
+              "client_id": "1002958468780-s56mugrqqonr979ag00dc9qkb168tfsr.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.meari"
+                "bundle_id": "it.meori.aqua.meoricucina"
               }
             }
           ]
@@ -67,10 +67,10 @@
               "client_type": 3
             },
             {
-              "client_id": "1002958468780-ksa88iclhnh8dmrgebnaa7ito9pu3j5b.apps.googleusercontent.com",
+              "client_id": "1002958468780-s56mugrqqonr979ag00dc9qkb168tfsr.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.meari"
+                "bundle_id": "it.meori.aqua.meoricucina"
               }
             }
           ]

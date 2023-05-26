@@ -323,7 +323,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
           SizedBox(
             height: MediaQuery.of(context).size.height - 250,
             child: ListView.builder(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(15),
                 scrollDirection: Axis.vertical,
                 itemCount: widget.orderDetail.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -351,7 +351,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                               ],
                             ),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
+                                horizontal: 10, vertical: 5),
                             // margin: const EdgeInsets.only(top: 100, bottom: 150),
                             margin: const EdgeInsets.only(bottom: 35),
                             width: MediaQuery.of(context).size.width - 40,
@@ -371,7 +371,7 @@ class _ConfirmProductState extends State<ConfirmProduct> {
                                               const Duration(seconds: 5),
                                           margin: const EdgeInsets.only(
                                               right: 50, left: 50),
-                                          padding: const EdgeInsets.all(10),
+                                          padding: const EdgeInsets.all(5),
                                           triggerMode: TooltipTriggerMode.tap,
                                           message:
                                               '${getCustomProduct(widget.orderDetail[index])}',

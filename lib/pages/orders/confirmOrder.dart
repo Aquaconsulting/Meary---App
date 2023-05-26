@@ -86,8 +86,14 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
     try {
       Services.updateOrderDetail(widget.orderDetail).then((result) {
         if (result != false) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Home(userID: userID!)));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Home(
+                      userID: userID!,
+                    )),
+            (Route<dynamic> route) => false,
+          );
 
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Dettaglio ordine modificato con successo'),
@@ -119,8 +125,14 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
               widget.orderDetail, widget.order['note'])
           .then((result) {
         if (result) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Home(userID: userID!)));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Home(
+                      userID: userID!,
+                    )),
+            (Route<dynamic> route) => false,
+          );
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Dettaglio ordine creato con successo'),
           ));
@@ -232,6 +244,10 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                         //SE LA ROTTA E' UPDATE NON AGGIUNGERE DI NUOVO I COPERTI
                         if (confirmUpdate) {
                           updateOrderDetail();
+                          await sendPushMessage(
+                              body: 'Refresha l\'app',
+                              title: 'Una comanda è stata modificata!',
+                              token: '/topics/cucina');
                         } else {
                           dynamic readyState = product_states
                               .where((element) =>
@@ -246,32 +262,13 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             'product_id': coperto[0]['id']
                           };
                           // AGGIUNGILO ALLA LISTA DI PRODOTTI
-                          print('FINAL COPERTO ${finalCoperto.toString()}');
                           widget.orderDetail.add(finalCoperto);
                           addOrderDetail();
+                          await sendPushMessage(
+                              body: 'Refresha l\'app',
+                              title: 'E\' stata aggiunta una comanda!',
+                              token: '/topics/cucina');
                         }
-                        print('+++++++++++++++++++++ ARRIVATO QUI');
-                        Map<String, String> dati = {
-                          'title': 'Titolo della notifica',
-                          'body': 'Corpo della notifica',
-                        };
-                        await firebaseMessaging.requestPermission(
-                          alert: true,
-                          announcement: false,
-                          badge: true,
-                          carPlay: false,
-                          criticalAlert: false,
-                          provisional: false,
-                          sound: true,
-                        );
-                        // await FirebaseMessaging.instance.sendMessage(
-                        //   to: '/topics/cucina',
-                        //   data: dati,
-                        // );
-                        await sendPushMessage(
-                            body: 'prova meari body',
-                            title: 'meari invio notifica',
-                            token: '/topics/cucina');
                       }
                     },
                     child: Row(
@@ -342,19 +339,27 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                 horizontal: 20, vertical: 10),
                                             backgroundColor:
                                                 HexColor('#FF3131')),
-                                        onPressed: () {
+                                        onPressed: () async {
                                           try {
-                                            Services.deleteOrder(
+                                            await Services.deleteOrder(
                                                     widget.order['id'])
                                                 .then((result) {
                                               if (result) {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Home(
-                                                                userID:
-                                                                    userID!)));
+                                                sendPushMessage(
+                                                    body: 'Refresha l\'app',
+                                                    title:
+                                                        'E\' stata eliminata una comanda!',
+                                                    token: '/topics/cucina');
+                                                Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Home(
+                                                            userID: userID!,
+                                                          )),
+                                                  (Route<dynamic> route) =>
+                                                      false,
+                                                );
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                         const SnackBar(

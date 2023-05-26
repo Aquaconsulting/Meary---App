@@ -87,8 +87,44 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final fcmToken = await FirebaseMessaging.instance.getToken();
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-  await firebaseMessaging.subscribeToTopic('cameriere');
+
   print(fcmToken);
+
+  var initializationSettingsAndroid =
+      const AndroidInitializationSettings('@mipmap/launcher_icon');
+  var initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+  flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse: (details) {
+    // loadData();
+  });
+
+  await firebaseMessaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  await firebaseMessaging.subscribeToTopic('cucina');
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    debugPrint('Got a message whilst in the foreground!');
+    debugPrint('Message data: ${message.contentAvailable}');
+    if (message.notification != null) {
+      flutterLocalNotificationsPlugin.show(
+          0,
+          message.notification!.title,
+          message.notification!.body,
+          const NotificationDetails(
+              android: AndroidNotificationDetails('cameriere', 'cameriere')),
+          payload: message.notification!.body);
+    }
+  });
+
   runApp(const MyApp());
 }
 
